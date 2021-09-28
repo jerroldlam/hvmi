@@ -175,6 +175,9 @@ typedef enum
     detTagProcSwapIn,
     detTagProcSwapOut,
 
+    detTagNtReadFile,
+    detTagNtWriteFile,
+
     detTagMax   ///< Must always be the last one.
 } DETOUR_TAG;
 

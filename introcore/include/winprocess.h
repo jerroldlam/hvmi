@@ -581,4 +581,14 @@ IntWinProcPrepareInstrument(
     _In_ void *Descriptor
     );
 
+INTSTATUS
+IntWinNTReadFileCall(
+    _In_ void* Detour
+    );
+
+INTSTATUS
+IntWinNTWriteFileCall(
+    _In_ void* Detour
+    );
+
 #endif // _WINPROCESS_H_

@@ -4684,3 +4684,18 @@ IntWinProcPrepareInstrument(
     return INT_STATUS_SUCCESS;
 }
 
+INTSTATUS
+IntWinNTReadFileCall(
+    _In_ void* Detour
+    )
+{   LOG("[DSO] Somebody is calling NTReadFile.");
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
+IntWinNTWriteFileCall(
+    _In_ void* Detour
+    )
+{   LOG("[DSO] Somebody is calling NTWriteFile.");
+    return INT_STATUS_SUCCESS;
+}

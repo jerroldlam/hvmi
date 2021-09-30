@@ -5010,8 +5010,8 @@ __section(".detours") =
                 .CodeLength = 0x8,
                 .Code =
                 {
-                    // 0x00: INT3
-                    0xCC,
+                    // 0x00: NOP
+                    0x90,
                     // 0x01: NOP
                     0x90,
                     // 0x02: NOP
@@ -5048,8 +5048,8 @@ __section(".detours") =
                 .CodeLength = 0x8,
                 .Code =
                 {
-                    // 0x00: INT3
-                    0xCC,
+                    // 0x00: NOP
+                    0x90,
                     // 0x01: NOP
                     0x90,
                     // 0x02: NOP

@@ -4992,7 +4992,7 @@ __section(".detours") =
         .FunctionName   = "NtReadFile",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,
-        .Callback       = NULL,
+        .Callback       = IntWinNTReadFileCall,
         .PreCallback    = IntWinNTReadFileCall,
         .Tag            = detTagNtReadFile,
         .Exported       = TRUE,
@@ -5011,8 +5011,8 @@ __section(".detours") =
                 .CodeLength = 0x8,
                 .Code =
                 {
-                    // 0x00: NOP
-                    0x90,
+                    // 0x00: INT3
+                    0xCC,
                     // 0x01: NOP
                     0x90,
                     // 0x02: NOP
@@ -5031,7 +5031,7 @@ __section(".detours") =
         .FunctionName   = "NtWriteFile",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,
-        .Callback       = NULL,
+        .Callback       = IntWinNTWriteFileCall,
         .PreCallback    = IntWinNTWriteFileCall,
         .Tag            = detTagNtWriteFile,
         .Exported       = TRUE,
@@ -5050,8 +5050,8 @@ __section(".detours") =
                 .CodeLength = 0x8,
                 .Code =
                 {
-                    // 0x00: NOP
-                    0x90,
+                    // 0x00: INT3
+                    0xCC,
                     // 0x01: NOP
                     0x90,
                     // 0x02: NOP

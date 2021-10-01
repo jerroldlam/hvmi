@@ -4988,7 +4988,7 @@ __section(".detours") =
     },
 
     {
-        .ModuleName     = u"ntdll.dll",
+        .ModuleName     = u"ntoskrnl.exe",
         .FunctionName   = "NtReadFile",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,
@@ -5027,7 +5027,7 @@ __section(".detours") =
     },
 
     {
-        .ModuleName     = u"ntdll.dll",
+        .ModuleName     = u"ntoskrnl.exe",
         .FunctionName   = "NtWriteFile",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,

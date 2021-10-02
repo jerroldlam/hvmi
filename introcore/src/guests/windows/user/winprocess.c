@@ -4688,6 +4688,7 @@ INTSTATUS
 IntWinNTReadFileCall(
     _In_ void* Detour
     )
+
 {   LOG("[DSO] Somebody is calling NTReadFile.");
     return INT_STATUS_SUCCESS;
 }
@@ -4696,6 +4697,25 @@ INTSTATUS
 IntWinNTWriteFileCall(
     _In_ void* Detour
     )
+
 {   LOG("[DSO] Somebody is calling NTWriteFile.");
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
+IntWinNTReadFileInit(
+    _In_ void* Detour
+    )
+
+{   LOG("[DSO] NTReadFile is hooking.");
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
+IntWinNTWriteFileInit(
+    _In_ void* Detour
+    )
+
+{   LOG("[DSO] NTWriteFile is hooking.");
     return INT_STATUS_SUCCESS;
 }

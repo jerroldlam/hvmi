@@ -4688,9 +4688,8 @@ INTSTATUS
 IntWinNTReadFileCall(
     _In_ WIN_PROCESS_OBJECT *Process
     )
-
 {
-    LOG("[DSO] %s is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
+    LOG("[DSO] '%s' is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;
 }
 
@@ -4698,7 +4697,6 @@ INTSTATUS
 IntWinNTWriteFileCall(
     _In_ WIN_PROCESS_OBJECT *Process
     )
-
 {
     LOG("[DSO] '%s' is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;
@@ -4708,7 +4706,6 @@ INTSTATUS
 IntWinNTReadFileInit(
     _In_ WIN_PROCESS_OBJECT *Process
     )
-
 {
     LOG("[DSO] NTReadFile is hooking.");
     return INT_STATUS_SUCCESS;
@@ -4718,7 +4715,6 @@ INTSTATUS
 IntWinNTWriteFileInit(
     _In_ WIN_PROCESS_OBJECT *Process
     )
-
 {
     LOG("[DSO] NTWriteFile is hooking.");
     return INT_STATUS_SUCCESS;

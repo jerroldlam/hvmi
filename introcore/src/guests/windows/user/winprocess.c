@@ -4698,7 +4698,7 @@ IntWinNTWriteFileCall(
     _In_ WIN_PROCESS_OBJECT *Process
     )
 {
-    LOG("[DSO] '%s' is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
+    LOG("[DSO] '%s' is calling NTWriteFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;
 }
 

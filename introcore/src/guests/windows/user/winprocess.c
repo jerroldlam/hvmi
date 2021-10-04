@@ -4686,19 +4686,19 @@ IntWinProcPrepareInstrument(
 
 INTSTATUS
 IntWinNTReadFileCall(
-    _In_ void* Detour
+    _In_ WIN_PROCESS_OBJECT *Process
     )
 
-{   LOG("[DSO] Somebody is calling NTReadFile.");
+{   LOG("[DSO] %s is calling NTReadFile @ GVA 0x%16llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;
 }
 
 INTSTATUS
 IntWinNTWriteFileCall(
-    _In_ void* Detour
+    _In_ WIN_PROCESS_OBJECT *Process
     )
 
-{   LOG("[DSO] Somebody is calling NTWriteFile.");
+{   LOG("[DSO] %s is calling NTReadFile @ GVA 0x%16llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;
 }
 

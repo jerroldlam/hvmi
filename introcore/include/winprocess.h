@@ -593,10 +593,12 @@ IntWinNTWriteFileCall(
 
 INTSTATUS
 IntWinNTReadFileInit(
+    _In_ WIN_PROCESS_OBJECT *Process
     );
 
 INTSTATUS
 IntWinNTWriteFileInit(
+    _In_ WIN_PROCESS_OBJECT *Process
     );
 
 #endif // _WINPROCESS_H_

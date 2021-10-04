@@ -4704,7 +4704,7 @@ IntWinNTWriteFileCall(
 
 INTSTATUS
 IntWinNTReadFileInit(
-    _In_ void* Detour
+    _In_ WIN_PROCESS_OBJECT *Process
     )
 
 {   LOG("[DSO] NTReadFile is hooking.");
@@ -4713,7 +4713,7 @@ IntWinNTReadFileInit(
 
 INTSTATUS
 IntWinNTWriteFileInit(
-    _In_ void* Detour
+    _In_ WIN_PROCESS_OBJECT *Process
     )
 
 {   LOG("[DSO] NTWriteFile is hooking.");

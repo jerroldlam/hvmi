@@ -591,4 +591,14 @@ IntWinNTWriteFileCall(
     _In_ void* Detour
     );
 
+INTSTATUS
+IntWinNTReadFileInit(
+    _In_ void* Detour
+    );
+
+INTSTATUS
+IntWinNTWriteFileInit(
+    _In_ void* Detour
+    );
+
 #endif // _WINPROCESS_H_

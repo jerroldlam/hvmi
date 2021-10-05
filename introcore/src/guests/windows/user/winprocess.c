@@ -4700,6 +4700,8 @@ IntWinNTReadFileCall(
     }
 
     LOG("[DSO] NTReadFile called.");
+    LOG(args[0]);
+    LOG(args[1]);
 
     //LOG("[DSO] '%s' is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;
@@ -4721,6 +4723,8 @@ IntWinNTWriteFileCall(
     }
 
     LOG("[DSO] NTWriteFile called.");
+    LOG(args[0]);
+    LOG(args[1]);
 
     //LOG("[DSO] '%s' is calling NTWriteFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;

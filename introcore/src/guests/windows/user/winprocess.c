@@ -4686,25 +4686,52 @@ IntWinProcPrepareInstrument(
 
 INTSTATUS
 IntWinNTReadFileCall(
-    _In_ WIN_PROCESS_OBJECT *Process
+    //_In_ WIN_PROCESS_OBJECT *Process
+    _In_ void const *Detour
     )
 {
-    LOG("[DSO] '%s' is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
+    INTSTATUS status;
+    QWORD args[9]
+
+    status = IntDetGetArguments(Detour, 9, args);
+    if (!INT_SUCCESS(status))
+    {
+        ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+        goto cleanup_and_exit;
+    }
+
+    LOG("[DSO] NTReadFile called.")
+
+    //LOG("[DSO] '%s' is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;
 }
 
 INTSTATUS
 IntWinNTWriteFileCall(
-    _In_ WIN_PROCESS_OBJECT *Process
+    //_In_ WIN_PROCESS_OBJECT *Process
+    _In_ void const *Detour
     )
 {
-    LOG("[DSO] '%s' is calling NTWriteFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
+    INTSTATUS status;
+    QWORD args[9]
+
+    status = IntDetGetArguments(Detour, 9, args);
+    if (!INT_SUCCESS(status))
+    {
+        ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+        goto cleanup_and_exit;
+    }
+
+    LOG("[DSO] NTWriteFile called.")
+
+    //LOG("[DSO] '%s' is calling NTWriteFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;
 }
 
 INTSTATUS
 IntWinNTReadFileInit(
-    _In_ WIN_PROCESS_OBJECT *Process
+    //_In_ WIN_PROCESS_OBJECT *Process
+    _In_ void const *Detour
     )
 {
     LOG("[DSO] NTReadFile is hooking.");
@@ -4713,7 +4740,8 @@ IntWinNTReadFileInit(
 
 INTSTATUS
 IntWinNTWriteFileInit(
-    _In_ WIN_PROCESS_OBJECT *Process
+    //_In_ WIN_PROCESS_OBJECT *Process
+    _In_ void const *Detour
     )
 {
     LOG("[DSO] NTWriteFile is hooking.");

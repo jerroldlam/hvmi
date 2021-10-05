@@ -4687,11 +4687,11 @@ IntWinProcPrepareInstrument(
 INTSTATUS
 IntWinNTReadFileCall(
     //_In_ WIN_PROCESS_OBJECT *Process
-    _In_ void const *Detour
+    _In_ void *Detour
     )
 {
     INTSTATUS status;
-    QWORD args[9]
+    QWORD args[9];
 
     status = IntDetGetArguments(Detour, 9, args);
     if (!INT_SUCCESS(status))
@@ -4709,11 +4709,11 @@ IntWinNTReadFileCall(
 INTSTATUS
 IntWinNTWriteFileCall(
     //_In_ WIN_PROCESS_OBJECT *Process
-    _In_ void const *Detour
+    _In_ void *Detour
     )
 {
     INTSTATUS status;
-    QWORD args[9]
+    QWORD args[9];
 
     status = IntDetGetArguments(Detour, 9, args);
     if (!INT_SUCCESS(status))
@@ -4731,7 +4731,7 @@ IntWinNTWriteFileCall(
 INTSTATUS
 IntWinNTReadFileInit(
     //_In_ WIN_PROCESS_OBJECT *Process
-    _In_ void const *Detour
+    _In_ void *Detour
     )
 {
     LOG("[DSO] NTReadFile is hooking.");
@@ -4741,7 +4741,7 @@ IntWinNTReadFileInit(
 INTSTATUS
 IntWinNTWriteFileInit(
     //_In_ WIN_PROCESS_OBJECT *Process
-    _In_ void const *Detour
+    _In_ void *Detour
     )
 {
     LOG("[DSO] NTWriteFile is hooking.");

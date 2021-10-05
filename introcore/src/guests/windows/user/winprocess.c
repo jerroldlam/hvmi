@@ -4700,7 +4700,7 @@ IntWinNTReadFileCall(
         goto cleanup_and_exit;
     }
 
-    LOG("[DSO] NTReadFile called.")
+    LOG("[DSO] NTReadFile called.");
 
     //LOG("[DSO] '%s' is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;
@@ -4722,7 +4722,7 @@ IntWinNTWriteFileCall(
         goto cleanup_and_exit;
     }
 
-    LOG("[DSO] NTWriteFile called.")
+    LOG("[DSO] NTWriteFile called.");
 
     //LOG("[DSO] '%s' is calling NTWriteFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;

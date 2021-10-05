@@ -4697,7 +4697,6 @@ IntWinNTReadFileCall(
     if (!INT_SUCCESS(status))
     {
         ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-        goto cleanup_and_exit;
     }
 
     LOG("[DSO] NTReadFile called.");
@@ -4719,7 +4718,6 @@ IntWinNTWriteFileCall(
     if (!INT_SUCCESS(status))
     {
         ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-        goto cleanup_and_exit;
     }
 
     LOG("[DSO] NTWriteFile called.");

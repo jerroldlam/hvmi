@@ -4693,7 +4693,7 @@ IntWinNTReadFileCall(
     INTSTATUS status;
     QWORD args[9];
 
-    status = IntDetGetArguments(Detour, 1 args);
+    status = IntDetGetArguments(Detour, 1, args);
     if (!INT_SUCCESS(status))
     {
         ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);

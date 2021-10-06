@@ -4708,7 +4708,7 @@ IntWinNTReadFileCall(
     //LOG("Argument 6: 0x%llx\n ", args[5]);
     //LOG("Argument 7: 0x%llx\n ", args[6]);
 
-    LOG("Process ID: %ld\n", Process->Pid);
+    LOG("Process ID: %d\n", Process->Pid);
 
 
     //LOG("[DSO] '%s' is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
@@ -4739,7 +4739,7 @@ IntWinNTWriteFileCall(
     //LOG("Argument 6: 0x%llx\n ", args[5]);
     //LOG("Argument 7: 0x%llx\n ", args[6]);
 
-    LOG("Process ID: %ld\n", Process->Pid);
+    LOG("Process ID: %d\n", Process->Pid);
 
     //LOG("[DSO] '%s' is calling NTWriteFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;

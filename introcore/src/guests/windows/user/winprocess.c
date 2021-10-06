@@ -4700,13 +4700,13 @@ IntWinNTReadFileCall(
     }
 
     LOG("[DSO] NTReadFile called.");
-    LOG("Argument 1: 0x%llx\n ", args[0]);
-    LOG("Argument 2: 0x%llx\n ", args[1]);
-    LOG("Argument 3: 0x%llx\n ", args[2]);
-    LOG("Argument 4: 0x%llx\n ", args[3]);
-    LOG("Argument 5: 0x%llx\n ", args[4]);
-    LOG("Argument 6: 0x%llx\n ", args[5]);
-    LOG("Argument 7: 0x%llx\n ", args[6]);
+    //LOG("Argument 1: 0x%llx\n ", args[0]);
+    //LOG("Argument 2: 0x%llx\n ", args[1]);
+    //LOG("Argument 3: 0x%llx\n ", args[2]);
+    //LOG("Argument 4: 0x%llx\n ", args[3]);
+    //LOG("Argument 5: 0x%llx\n ", args[4]);
+    //LOG("Argument 6: 0x%llx\n ", args[5]);
+    //LOG("Argument 7: 0x%llx\n ", args[6]);
 
     LOG("Process ID: 0x%llx\n", Process->Pid);
 
@@ -4731,13 +4731,13 @@ IntWinNTWriteFileCall(
     }
 
     LOG("[DSO] NTWriteFile called.");
-    LOG("Argument 1: 0x%llx\n ", args[0]);
-    LOG("Argument 2: 0x%llx\n ", args[1]);
-    LOG("Argument 3: 0x%llx\n ", args[2]);
-    LOG("Argument 4: 0x%llx\n ", args[3]);
-    LOG("Argument 5: 0x%llx\n ", args[4]);
-    LOG("Argument 6: 0x%llx\n ", args[5]);
-    LOG("Argument 7: 0x%llx\n ", args[6]);
+    //LOG("Argument 1: 0x%llx\n ", args[0]);
+    //LOG("Argument 2: 0x%llx\n ", args[1]);
+    //LOG("Argument 3: 0x%llx\n ", args[2]);
+    //LOG("Argument 4: 0x%llx\n ", args[3]);
+    //LOG("Argument 5: 0x%llx\n ", args[4]);
+    //LOG("Argument 6: 0x%llx\n ", args[5]);
+    //LOG("Argument 7: 0x%llx\n ", args[6]);
 
     LOG("Process ID: 0x%llx\n", Process->Pid);
 

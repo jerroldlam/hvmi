@@ -4686,29 +4686,29 @@ IntWinProcPrepareInstrument(
 
 INTSTATUS
 IntWinNTReadFileCall(
-    _In_ WIN_PROCESS_OBJECT *Process
-    //_In_ void *Detour
+    //_In_ WIN_PROCESS_OBJECT *Process
+    _In_ void *Detour
     )
 {
-    /*INTSTATUS status;
-    QWORD args[7];*/
+    INTSTATUS status;
+    QWORD args[7];
 
-    /*status = IntDetGetArguments(Detour, 7, args);
+    status = IntDetGetArguments(Detour, 7, args);
     if (!INT_SUCCESS(status))
     {
         ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-    }*/
+    }
 
     LOG("[DSO] NTReadFile called.");
-    //LOG("Argument 1: 0x%llx\n ", args[0]);
-    //LOG("Argument 2: 0x%llx\n ", args[1]);
-    //LOG("Argument 3: 0x%llx\n ", args[2]);
-    //LOG("Argument 4: 0x%llx\n ", args[3]);
-    //LOG("Argument 5: 0x%llx\n ", args[4]);
-    //LOG("Argument 6: 0x%llx\n ", args[5]);
-    //LOG("Argument 7: 0x%llx\n ", args[6]);
+    LOG("Argument 1: 0x%llx\n ", args[0]);
+    LOG("Argument 2: 0x%llx\n ", args[1]);
+    LOG("Argument 3: 0x%llx\n ", args[2]);
+    LOG("Argument 4: 0x%llx\n ", args[3]);
+    LOG("Argument 5: 0x%llx\n ", args[4]);
+    LOG("Argument 6: 0x%llx\n ", args[5]);
+    LOG("Argument 7: 0x%llx\n ", args[6]);
 
-    LOG("Process ID: %d\n", Process->Pid);
+    //LOG("Process ID: %d\n", Process->Pid);
 
 
     //LOG("[DSO] '%s' is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
@@ -4717,29 +4717,29 @@ IntWinNTReadFileCall(
 
 INTSTATUS
 IntWinNTWriteFileCall(
-    _In_ WIN_PROCESS_OBJECT *Process
-    //_In_ void *Detour
+    //_In_ WIN_PROCESS_OBJECT *Process
+    _In_ void *Detour
     )
 {
-    /*INTSTATUS status;
+    INTSTATUS status;
     QWORD args[7];
 
     status = IntDetGetArguments(Detour, 7, args);
     if (!INT_SUCCESS(status))
     {
         ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-    }*/
+    }
 
     LOG("[DSO] NTWriteFile called.");
-    //LOG("Argument 1: 0x%llx\n ", args[0]);
-    //LOG("Argument 2: 0x%llx\n ", args[1]);
-    //LOG("Argument 3: 0x%llx\n ", args[2]);
-    //LOG("Argument 4: 0x%llx\n ", args[3]);
-    //LOG("Argument 5: 0x%llx\n ", args[4]);
-    //LOG("Argument 6: 0x%llx\n ", args[5]);
-    //LOG("Argument 7: 0x%llx\n ", args[6]);
+    LOG("Argument 1: 0x%llx\n ", args[0]);
+    LOG("Argument 2: 0x%llx\n ", args[1]);
+    LOG("Argument 3: 0x%llx\n ", args[2]);
+    LOG("Argument 4: 0x%llx\n ", args[3]);
+    LOG("Argument 5: 0x%llx\n ", args[4]);
+    LOG("Argument 6: 0x%llx\n ", args[5]);
+    LOG("Argument 7: 0x%llx\n ", args[6]);
 
-    LOG("Process ID: %d\n", Process->Pid);
+    //LOG("Process ID: %d\n", Process->Pid);
 
     //LOG("[DSO] '%s' is calling NTWriteFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;

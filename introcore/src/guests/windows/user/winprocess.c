@@ -4690,14 +4690,14 @@ IntWinNTReadFileCall(
     //_In_ void *Detour
     )
 {
-    INTSTATUS status;
-    QWORD args[7];
+    /*INTSTATUS status;
+    QWORD args[7];*/
 
-    status = IntDetGetArguments(Detour, 7, args);
+    /*status = IntDetGetArguments(Detour, 7, args);
     if (!INT_SUCCESS(status))
     {
         ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-    }
+    }*/
 
     LOG("[DSO] NTReadFile called.");
     //LOG("Argument 1: 0x%llx\n ", args[0]);
@@ -4721,14 +4721,14 @@ IntWinNTWriteFileCall(
     //_In_ void *Detour
     )
 {
-    INTSTATUS status;
+    /*INTSTATUS status;
     QWORD args[7];
 
     status = IntDetGetArguments(Detour, 7, args);
     if (!INT_SUCCESS(status))
     {
         ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-    }
+    }*/
 
     LOG("[DSO] NTWriteFile called.");
     //LOG("Argument 1: 0x%llx\n ", args[0]);

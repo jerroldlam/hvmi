@@ -583,25 +583,23 @@ IntWinProcPrepareInstrument(
 
 INTSTATUS
 IntWinNTReadFileCall(
-    //_In_ WIN_PROCESS_OBJECT *Process
+    _In_ WIN_PROCESS_OBJECT *Process,
     _In_ void *Detour
     );
 
 INTSTATUS
 IntWinNTWriteFileCall(
-    //_In_ WIN_PROCESS_OBJECT *Process
+    _In_ WIN_PROCESS_OBJECT *Process,
     _In_ void *Detour
     );
 
 INTSTATUS
 IntWinNTReadFileInit(
-    //_In_ WIN_PROCESS_OBJECT *Process
     _In_ void *Detour
     );
 
 INTSTATUS
 IntWinNTWriteFileInit(
-    //_In_ WIN_PROCESS_OBJECT *Process
     _In_ void *Detour
     );
 

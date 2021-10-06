@@ -4687,7 +4687,7 @@ IntWinProcPrepareInstrument(
 INTSTATUS
 IntWinNTReadFileCall(
     _In_ WIN_PROCESS_OBJECT *Process,
-    _In_ void *Detour
+    //_In_ void *Detour
     )
 {
     INTSTATUS status;
@@ -4708,7 +4708,7 @@ IntWinNTReadFileCall(
     //LOG("Argument 6: 0x%llx\n ", args[5]);
     //LOG("Argument 7: 0x%llx\n ", args[6]);
 
-    //LOG("Process ID: %d\n", Process->Pid);
+    LOG("Process ID: %d\n", Process->Pid);
 
 
     //LOG("[DSO] '%s' is calling NTReadFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
@@ -4718,7 +4718,7 @@ IntWinNTReadFileCall(
 INTSTATUS
 IntWinNTWriteFileCall(
     _In_ WIN_PROCESS_OBJECT *Process,
-    _In_ void *Detour
+    //_In_ void *Detour
     )
 {
     INTSTATUS status;
@@ -4739,7 +4739,7 @@ IntWinNTWriteFileCall(
     //LOG("Argument 6: 0x%llx\n ", args[5]);
     //LOG("Argument 7: 0x%llx\n ", args[6]);
 
-    //LOG("Process ID: %d\n", Process->Pid);
+    LOG("Process ID: %d\n", Process->Pid);
 
     //LOG("[DSO] '%s' is calling NTWriteFile @ GVA 0x%016llx.", Process->Name, Process->EprocessAddress);
     return INT_STATUS_SUCCESS;
@@ -4748,7 +4748,7 @@ IntWinNTWriteFileCall(
 INTSTATUS
 IntWinNTReadFileInit(
     //_In_ WIN_PROCESS_OBJECT *Process
-    _In_ void *Detour
+    //_In_ void *Detour
     )
 {
     LOG("[DSO] NTReadFile is hooking.");
@@ -4758,7 +4758,7 @@ IntWinNTReadFileInit(
 INTSTATUS
 IntWinNTWriteFileInit(
     //_In_ WIN_PROCESS_OBJECT *Process
-    _In_ void *Detour
+    //_In_ void *Detour
     )
 {
     LOG("[DSO] NTWriteFile is hooking.");

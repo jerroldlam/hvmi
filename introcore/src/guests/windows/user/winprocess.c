@@ -4762,19 +4762,19 @@ IntWinNTWriteFileCall(
     status = IntDetGetArgument(Detour, 0, NULL, 0, &eprocessAddr);
     if (!INT_SUCCESS(status))
     {
-        LOG("[DSO] NTReadFile failed to get eprocess address.");
+        LOG("[DSO] NTWrriteFile failed to get eprocess address.");
         return INT_STATUS_SUCCESS;
     }
 
     pProcess = IntWinProcFindObjectByEprocess(eprocessAddr);
     if (!pProcess)
     {
-        ERROR("[DSO] [READ] [ERROR] IntWinProcFindObjectByEprocess failed for Eprocess 0x%016llx with status: 0x%08x",
+        ERROR("[DSO] [WRTIE] [ERROR] IntWinProcFindObjectByEprocess failed for Eprocess 0x%016llx with status: 0x%08x",
                eprocessAddr, status);
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [READ] [PROCESS-DUMP] Swapped in: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[DSO] [WRITE] [PROCESS-DUMP] Swapped in: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,

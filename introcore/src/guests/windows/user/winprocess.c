@@ -4801,3 +4801,21 @@ IntWinNTWriteFileInit(
     LOG("[DSO] NTWriteFile is hooking.");
     return INT_STATUS_SUCCESS;
 }
+
+INTSTATUS
+IntWinSendCall(
+    void
+    )
+{
+    LOG("[DSO] Send called");
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
+IntWinReceiveCall(
+    void
+    )
+{
+    LOG("[DSO] Receive called");
+    return INT_STATUS_SUCCESS;
+}

@@ -605,4 +605,14 @@ IntWinNTWriteFileInit(
     void
     );
 
+INTSTATUS
+IntWinSendCall(
+    void
+    );
+
+INTSTATUS
+IntWinReceiveCall(
+    void
+    );
+
 #endif // _WINPROCESS_H_

@@ -5064,6 +5064,82 @@ __section(".detours") =
             },
         },
     },
+
+    {
+        .ModuleName     = u"ws2_32.dll",
+        .FunctionName   = "send",
+        .MinVersion     = DETOUR_MIN_VERSION_ANY,
+        .MaxVersion     = DETOUR_MAX_VERSION_ANY,
+        .Callback       = IntWinSendCall,
+        .Tag            = detTagSendFile,
+        .Exported       = TRUE,
+        .NotCritical    = FALSE,
+        .DisableFlags   = 0,
+        .EnableFlags    = DETOUR_ENABLE_ALWAYS,
+        .Arguments      = DET_ARGS_DEFAULT_WIN64,
+        .HandlersCount  = 1,
+        .Handlers       =
+        {
+            {
+                .MinVersion    = DETOUR_MIN_VERSION_ANY,
+                .MaxVersion    = DETOUR_MAX_VERSION_ANY,
+                .HypercallType = hypercallTypeInt3,
+
+                .CodeLength = 0x8,
+                .Code =
+                {
+                    // 0x00: INT3
+                    0xCC,
+                    // 0x01: NOP
+                    0x90,
+                    // 0x02: NOP
+                    0x90,
+                    // 0x03: JMP       0x8
+                    0xE9, 0x00, 0x00, 0x00, 0x00
+                },
+                .HypercallOffset     = 0x0,
+                .RelocatedCodeOffset = 0x3,
+            },
+        },
+    },
+
+    {
+        .ModuleName     = u"ws2_32.dll",
+        .FunctionName   = "recv",
+        .MinVersion     = DETOUR_MIN_VERSION_ANY,
+        .MaxVersion     = DETOUR_MAX_VERSION_ANY,
+        .Callback       = IntWinReceiveCall,
+        .Tag            = detTagReceiveFile,
+        .Exported       = TRUE,
+        .NotCritical    = FALSE,
+        .DisableFlags   = 0,
+        .EnableFlags    = DETOUR_ENABLE_ALWAYS,
+        .Arguments      = DET_ARGS_DEFAULT_WIN64,
+        .HandlersCount  = 1,
+        .Handlers       =
+        {
+            {
+                .MinVersion    = DETOUR_MIN_VERSION_ANY,
+                .MaxVersion    = DETOUR_MAX_VERSION_ANY,
+                .HypercallType = hypercallTypeInt3,
+
+                .CodeLength = 0x8,
+                .Code =
+                {
+                    // 0x00: INT3
+                    0xCC,
+                    // 0x01: NOP
+                    0x90,
+                    // 0x02: NOP
+                    0x90,
+                    // 0x03: JMP       0x8
+                    0xE9, 0x00, 0x00, 0x00, 0x00
+                },
+                .HypercallOffset     = 0x0,
+                .RelocatedCodeOffset = 0x3,
+            },
+        },
+    },
 };
 
 /// The number of functions to be hooked for 64-bit Windows guests.

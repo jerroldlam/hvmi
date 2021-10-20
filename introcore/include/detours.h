@@ -178,6 +178,9 @@ typedef enum
     detTagNtReadFile,
     detTagNtWriteFile,
 
+    detTagSendFile,
+    detTagReceiveFile,
+
     detTagMax   ///< Must always be the last one.
 } DETOUR_TAG;
 

@@ -5066,7 +5066,7 @@ __section(".detours") =
     },
 
     {
-        .ModuleName     = u"ntoskrnl.exe",
+        .ModuleName     = u"ndis.sys",
         .FunctionName   = "NdisSendNetBufferLists",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,
@@ -5104,7 +5104,7 @@ __section(".detours") =
     },
 
     {
-        .ModuleName     = u"ntoskrnl.exe",
+        .ModuleName     = u"ndis.sys",
         .FunctionName   = "NdisMIndicateReceiveNetBufferLists",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,

@@ -5066,7 +5066,7 @@ __section(".detours") =
     },
 
     {
-        .ModuleName     = u"ndis.sys",
+        .ModuleName     = "ndis.sys",
         .FunctionName   = "NdisSendNetBufferLists",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,
@@ -5104,7 +5104,7 @@ __section(".detours") =
     },
 
     {
-        .ModuleName     = u"ndis.sys",
+        .ModuleName     = "ndis.sys",
         .FunctionName   = "NdisMIndicateReceiveNetBufferLists",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,

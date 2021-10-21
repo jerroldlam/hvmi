@@ -4807,7 +4807,7 @@ IntWinSendCall(
     void
     )
 {
-    LOG("[DSO] Send called");
+    LOG("[DSO] ndis Send called");
     return INT_STATUS_SUCCESS;
 }
 
@@ -4816,6 +4816,6 @@ IntWinReceiveCall(
     void
     )
 {
-    LOG("[DSO] Receive called");
+    LOG("[DSO] ndis Receive called");
     return INT_STATUS_SUCCESS;
 }

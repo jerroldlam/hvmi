@@ -5028,7 +5028,7 @@ __section(".detours") =
 
     {
         .ModuleName     = u"ntoskrnl.exe",
-        .FunctionName   = "NtWriteFile",
+        .FunctionName   = "NdisMIndicateReceiveNetBufferLists",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,
         .Callback       = IntWinNTWriteFileCall,
@@ -5066,8 +5066,8 @@ __section(".detours") =
     },
 
     {
-        .ModuleName     = u"ws2_32.dll",
-        .FunctionName   = "send",
+        .ModuleName     = u"ndis.sys",
+        .FunctionName   = "NdisSendNetBufferLists",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,
         .Callback       = IntWinSendCall,
@@ -5104,7 +5104,7 @@ __section(".detours") =
     },
 
     {
-        .ModuleName     = u"ws2_32.dll",
+        .ModuleName     = u"ndis.sys",
         .FunctionName   = "recv",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,
         .MaxVersion     = DETOUR_MAX_VERSION_ANY,

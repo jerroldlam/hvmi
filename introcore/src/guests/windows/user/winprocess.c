@@ -4720,7 +4720,7 @@ IntWinNTReadFileCall(
     if (!pProcess)
     {
         ERROR("[DSO] [READ] [ERROR] IntWinProcFindObjectByEprocess failed for Eprocess 0x%016llx with status: 0x%08x",
-               eprocessAddr, status);
+               args[4], status);
         return INT_STATUS_SUCCESS;
     }
 
@@ -4770,7 +4770,7 @@ IntWinNTWriteFileCall(
     if (!pProcess)
     {
         ERROR("[DSO] [WRTIE] [ERROR] IntWinProcFindObjectByEprocess failed for Eprocess 0x%016llx with status: 0x%08x",
-               eprocessAddr, status);
+               args[4], status);
         return INT_STATUS_SUCCESS;
     }
 

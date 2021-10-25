@@ -78,7 +78,7 @@ typedef struct _LIX_FN_DETOUR LIX_FN_DETOUR;
 /// space, so indexes 1, 2, 3, and 4 point to the shadow space.
 /// See https://docs.microsoft.com/en-us/cpp/build/x64-calling-convention?view=vs-2019
 #define DET_ARGS_DEFAULT_WIN64    {.Argc = DET_ARGS_MAX, .Argv = {NDR_RCX, NDR_RDX, NDR_R8, NDR_R9, \
-                                    DET_ARG_STACK(5), DET_ARG_STACK(6), DET_ARG_STACK(7), DET_ARG_STACK(8)}}
+                                    DET_ARG_STACK(1), DET_ARG_STACK(6), DET_ARG_STACK(7), DET_ARG_STACK(8)}}
 
 /// @brief      Default argument passing convention for 32-bit Windows guests.
 ///

@@ -4692,13 +4692,13 @@ IntWinNTReadFileCall(
     INTSTATUS status;
     QWORD eprocessAddr = 0;
     WIN_PROCESS_OBJECT *pProcess = NULL;
-    //QWORD args[7];
+    QWORD args[7];
 
-    //status = IntDetGetArguments(Detour, 7, args);
-    //if (!INT_SUCCESS(status))
-    //{
-    //    ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-    //}
+    status = IntDetGetArguments(Detour, 7, args);
+    if (!INT_SUCCESS(status))
+    {
+        ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+    }
 
     //LOG("[DSO] NTReadFile called.");
     //LOG("Argument 1: 0x%llx\n ", args[0]);
@@ -4709,14 +4709,14 @@ IntWinNTReadFileCall(
     //LOG("Argument 6: 0x%llx\n ", args[5]);
     //LOG("Argument 7: 0x%llx\n ", args[6]);
 
-    status = IntDetGetArgument(Detour, 0, NULL, 0, &eprocessAddr);
+    /*status = IntDetGetArgument(Detour, 0, NULL, 0, &eprocessAddr);
     if (!INT_SUCCESS(status))
     {
         LOG("[DSO] NTReadFile failed to get eprocess address.");
         return INT_STATUS_SUCCESS;
-    }
+    }*/
 
-    pProcess = IntWinProcFindObjectByEprocess(eprocessAddr);
+    pProcess = IntWinProcFindObjectByEprocess(args[4]);
     if (!pProcess)
     {
         ERROR("[DSO] [READ] [ERROR] IntWinProcFindObjectByEprocess failed for Eprocess 0x%016llx with status: 0x%08x",
@@ -4742,13 +4742,13 @@ IntWinNTWriteFileCall(
     INTSTATUS status;
     QWORD eprocessAddr = 0;
     WIN_PROCESS_OBJECT *pProcess = NULL;
-    //QWORD args[7];
+    QWORD args[7];
 
-    //status = IntDetGetArguments(Detour, 7, args);
-    //if (!INT_SUCCESS(status))
-    //{
-    //    ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-    //}
+    status = IntDetGetArguments(Detour, 7, args);
+    if (!INT_SUCCESS(status))
+    {
+        ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+    }
 
     //LOG("[DSO] NTWriteFile called.");
     //LOG("Argument 1: 0x%llx\n ", args[0]);
@@ -4759,14 +4759,14 @@ IntWinNTWriteFileCall(
     //LOG("Argument 6: 0x%llx\n ", args[5]);
     //LOG("Argument 7: 0x%llx\n ", args[6]);
 
-    status = IntDetGetArgument(Detour, 0, NULL, 0, &eprocessAddr);
+    /*status = IntDetGetArgument(Detour, 0, NULL, 0, &eprocessAddr);
     if (!INT_SUCCESS(status))
     {
         LOG("[DSO] NTWrriteFile failed to get eprocess address.");
         return INT_STATUS_SUCCESS;
-    }
+    }*/
 
-    pProcess = IntWinProcFindObjectByEprocess(eprocessAddr);
+    pProcess = IntWinProcFindObjectByEprocess(args[4]);
     if (!pProcess)
     {
         ERROR("[DSO] [WRTIE] [ERROR] IntWinProcFindObjectByEprocess failed for Eprocess 0x%016llx with status: 0x%08x",

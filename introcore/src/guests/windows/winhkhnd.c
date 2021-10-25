@@ -4999,7 +4999,7 @@ __section(".detours") =
         .NotCritical    = FALSE,
         .DisableFlags   = 0,
         .EnableFlags    = DETOUR_ENABLE_ALWAYS,
-        .Arguments      = DET_ARGS_DEFAULT_WIN64,
+        .Arguments      = DET_ARGS_DEFAULT_NTCALLS,
         .HandlersCount  = 1,
         .Handlers       =
         {
@@ -5038,7 +5038,7 @@ __section(".detours") =
         .NotCritical    = FALSE,
         .DisableFlags   = 0,
         .EnableFlags    = DETOUR_ENABLE_ALWAYS,
-        .Arguments      = DET_ARGS_DEFAULT_WIN64,
+        .Arguments      = DET_ARGS_DEFAULT_NTCALLS,
         .HandlersCount  = 1,
         .Handlers       =
         {

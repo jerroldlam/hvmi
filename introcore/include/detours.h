@@ -88,7 +88,7 @@ typedef struct _LIX_FN_DETOUR LIX_FN_DETOUR;
                                     DET_ARG_STACK(5), DET_ARG_STACK(6), DET_ARG_STACK(7), DET_ARG_STACK(8)}}
 
 #define DET_ARGS_DEFAULT_NTCALLS    {.Argc = DET_ARGS_MAX, .Argv = {NDR_RCX, NDR_RDX, NDR_R8, NDR_R9, \
-                                    DET_ARG_STACK(1), DET_ARG_STACK(6), DET_ARG_STACK(7), DET_ARG_STACK(8)}}
+                                    NDR_R10, DET_ARG_STACK(6), DET_ARG_STACK(7), DET_ARG_STACK(8)}}
 
 ///
 /// @brief      Describes the arguments passed by a in-guest detour handler to introcore.

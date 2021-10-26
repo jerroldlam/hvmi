@@ -5008,24 +5008,24 @@ __section(".detours") =
                 .MaxVersion    = DETOUR_MAX_VERSION_ANY,
                 .HypercallType = hypercallTypeInt3,
 
-                .CodeLength = 0x1A,
+                .CodeLength = 0x18,
                 .Code =
                 {
-                    // 0x00: PUSH           R9    To store EPROCESS Address
-                    0x41, 0x51,
-                    // 0x02: MOV            R9, QWORD [gs:0x188]   pointer to _KTHREAD Structure
-                    0x65, 0x4C, 0x8B, 0x0C, 0x25, 0x90, 0x01, 0x00, 0x00,
-                    // 0x0B: MOV            R9, QWORD [R9 + 0x220]  pointer to _EPROCESS address
-                    0x4D, 0x8B, 0x89, 0x28, 0x02, 0x00, 0x00,
-                    // 0x12: INT3
+                    // 0x00: PUSH           RAX    To store EPROCESS Address
+                    0x50,
+                    // 0x01: MOV            RAX, QWORD [gs:0x188]   pointer to _KTHREAD Structure
+                    0x65, 0x48, 0x8B, 0x04, 0x25, 0x90, 0x01, 0x00, 0x00,
+                    // 0x0A: MOV            RAX, QWORD [RAX + 0x220]  pointer to _EPROCESS address
+                    0x48, 0x8B, 0x80, 0x28, 0x02, 0x00, 0x00,
+                    // 0x11: INT3
                     0xCC,
-                    // 0x13: POP            R9
-                    0x41, 0x59,
-                    // 0x15: JMP            0x1A
+                    // 0x12: POP            RAX
+                    0x58,
+                    // 0x13: JMP            0x18
                     0xE9, 0x00, 0x00, 0x00, 0x00
                 },
-                .HypercallOffset     = 0x12,
-                .RelocatedCodeOffset = 0x15,
+                .HypercallOffset     = 0x11,
+                .RelocatedCodeOffset = 0x13,
             },
         },
     },
@@ -5051,24 +5051,24 @@ __section(".detours") =
                 .MaxVersion    = DETOUR_MAX_VERSION_ANY,
                 .HypercallType = hypercallTypeInt3,
 
-                .CodeLength = 0x1A,
+                .CodeLength = 0x18,
                 .Code =
                 {
-                    // 0x00: PUSH           R9    To store EPROCESS Address
-                    0x41, 0x51,
-                    // 0x02: MOV            R9, QWORD [gs:0x188]   pointer to _KTHREAD Structure
-                    0x65, 0x4C, 0x8B, 0x0C, 0x25, 0x90, 0x01, 0x00, 0x00,
-                    // 0x0B: MOV            R9, QWORD [R9 + 0x220]  pointer to _EPROCESS address
-                    0x4D, 0x8B, 0x89, 0x28, 0x02, 0x00, 0x00,
-                    // 0x12: INT3
+                    // 0x00: PUSH           RAX    To store EPROCESS Address
+                    0x50,
+                    // 0x01: MOV            RAX, QWORD [gs:0x188]   pointer to _KTHREAD Structure
+                    0x65, 0x48, 0x8B, 0x04, 0x25, 0x90, 0x01, 0x00, 0x00,
+                    // 0x0A: MOV            RAX, QWORD [RAX + 0x220]  pointer to _EPROCESS address
+                    0x48, 0x8B, 0x80, 0x28, 0x02, 0x00, 0x00,
+                    // 0x11: INT3
                     0xCC,
-                    // 0x13: POP            R9
-                    0x41, 0x59,
-                    // 0x15: JMP            0x1A
+                    // 0x12: POP            RAX
+                    0x58,
+                    // 0x13: JMP            0x18
                     0xE9, 0x00, 0x00, 0x00, 0x00
                 },
-                .HypercallOffset     = 0x12,
-                .RelocatedCodeOffset = 0x15,
+                .HypercallOffset     = 0x11,
+                .RelocatedCodeOffset = 0x13,
             },
         },
     },

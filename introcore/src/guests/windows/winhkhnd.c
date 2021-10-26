@@ -5008,7 +5008,7 @@ __section(".detours") =
                 .MaxVersion    = DETOUR_MAX_VERSION_ANY,
                 .HypercallType = hypercallTypeInt3,
 
-                .CodeLength = 0x1C,
+                .CodeLength = 0x1A,
                 .Code =
                 {
                     // 0x00: PUSH           R9    To store EPROCESS Address
@@ -5019,17 +5019,13 @@ __section(".detours") =
                     0x4D, 0x8B, 0x89, 0x28, 0x02, 0x00, 0x00,
                     // 0x12: INT3
                     0xCC,
-                    // 0x13: NOP
-                    0x90,
-                    // 0x14: NOP
-                    0x90,
-                    // 0x15: POP            R9
+                    // 0x13: POP            R9
                     0x41, 0x59,
-                    // 0x17: JMP            0x1C
+                    // 0x15: JMP            0x1A
                     0xE9, 0x00, 0x00, 0x00, 0x00
                 },
                 .HypercallOffset     = 0x12,
-                .RelocatedCodeOffset = 0x17,
+                .RelocatedCodeOffset = 0x15,
             },
         },
     },
@@ -5055,7 +5051,7 @@ __section(".detours") =
                 .MaxVersion    = DETOUR_MAX_VERSION_ANY,
                 .HypercallType = hypercallTypeInt3,
 
-                .CodeLength = 0x1C,
+                .CodeLength = 0x1A,
                 .Code =
                 {
                     // 0x00: PUSH           R9    To store EPROCESS Address
@@ -5066,17 +5062,13 @@ __section(".detours") =
                     0x4D, 0x8B, 0x89, 0x28, 0x02, 0x00, 0x00,
                     // 0x12: INT3
                     0xCC,
-                    // 0x13: NOP
-                    0x90,
-                    // 0x14: NOP
-                    0x90,
-                    // 0x15: POP            R9
+                    // 0x13: POP            R9
                     0x41, 0x59,
-                    // 0x17: JMP            0x1C
+                    // 0x15: JMP            0x1A
                     0xE9, 0x00, 0x00, 0x00, 0x00
                 },
                 .HypercallOffset     = 0x12,
-                .RelocatedCodeOffset = 0x17,
+                .RelocatedCodeOffset = 0x15,
             },
         },
     },

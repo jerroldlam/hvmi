@@ -4766,11 +4766,11 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }*/
 
-    pProcess = IntWinProcFindObjectByEprocess(args[3]);
+    pProcess = IntWinProcFindObjectByEprocess(args[4]);
     if (!pProcess)
     {
         ERROR("[DSO] [WRTIE] [ERROR] IntWinProcFindObjectByEprocess failed for Eprocess 0x%016llx with status: 0x%08x",
-               args[3], status);
+               args[4], status);
         return INT_STATUS_SUCCESS;
     }
 

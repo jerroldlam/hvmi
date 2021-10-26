@@ -4716,11 +4716,11 @@ IntWinNTReadFileCall(
         return INT_STATUS_SUCCESS;
     }*/
 
-    pProcess = IntWinProcFindObjectByEprocess(args[4]);
+    pProcess = IntWinProcFindObjectByEprocess(args[3]);
     if (!pProcess)
     {
         ERROR("[DSO] [READ] [ERROR] IntWinProcFindObjectByEprocess failed for Eprocess 0x%016llx with status: 0x%08x",
-               args[4], status);
+               args[3], status);
         return INT_STATUS_SUCCESS;
     }
 
@@ -4766,11 +4766,11 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }*/
 
-    pProcess = IntWinProcFindObjectByEprocess(args[4]);
+    pProcess = IntWinProcFindObjectByEprocess(args[3]);
     if (!pProcess)
     {
         ERROR("[DSO] [WRTIE] [ERROR] IntWinProcFindObjectByEprocess failed for Eprocess 0x%016llx with status: 0x%08x",
-               args[4], status);
+               args[3], status);
         return INT_STATUS_SUCCESS;
     }
 

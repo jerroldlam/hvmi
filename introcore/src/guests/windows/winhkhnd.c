@@ -5008,24 +5008,20 @@ __section(".detours") =
                 .MaxVersion    = DETOUR_MAX_VERSION_ANY,
                 .HypercallType = hypercallTypeInt3,
 
-                .CodeLength = 0x18,
+                .CodeLength = 0x8,
                 .Code =
                 {
-                    // 0x00: PUSH           RAX    To store EPROCESS Address
-                    0x50,
-                    // 0x01: MOV            RAX, QWORD [gs:0x188]   pointer to _KTHREAD Structure
-                    0x65, 0x48, 0x8B, 0x04, 0x25, 0x90, 0x01, 0x00, 0x00,
-                    // 0x0A: MOV            RAX, QWORD [RAX + 0x220]  pointer to _EPROCESS address
-                    0x48, 0x8B, 0x80, 0x28, 0x02, 0x00, 0x00,
-                    // 0x11: INT3
+                    // 0x00: INT3
                     0xCC,
-                    // 0x12: POP            RAX
-                    0x58,
-                    // 0x13: JMP            0x18
+                    // 0x01: NOP
+                    0x90,
+                    // 0x02: NOP
+                    0x90,
+                    // 0x03: JMP       0x8
                     0xE9, 0x00, 0x00, 0x00, 0x00
                 },
-                .HypercallOffset     = 0x11,
-                .RelocatedCodeOffset = 0x13,
+                .HypercallOffset     = 0x0,
+                .RelocatedCodeOffset = 0x3,
             },
         },
     },

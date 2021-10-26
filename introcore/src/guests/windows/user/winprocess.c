@@ -4689,7 +4689,7 @@ IntWinNTReadFileCall(
     _In_ void *Detour
     )
 {
-    INTSTATUS status;
+    /*INTSTATUS status;
     QWORD eprocessAddr = 0;
     WIN_PROCESS_OBJECT *pProcess = NULL;
     QWORD args[7];
@@ -4698,9 +4698,9 @@ IntWinNTReadFileCall(
     if (!INT_SUCCESS(status))
     {
         ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-    }
+    }*/
 
-    //LOG("[DSO] NTReadFile called.");
+    LOG("[DSO] NTReadFile called.");
     //LOG("Argument 1: 0x%llx\n ", args[0]);
     //LOG("Argument 2: 0x%llx\n ", args[1]);
     //LOG("Argument 3: 0x%llx\n ", args[2]);
@@ -4716,7 +4716,7 @@ IntWinNTReadFileCall(
         return INT_STATUS_SUCCESS;
     }*/
 
-    pProcess = IntWinProcFindObjectByEprocess(args[3]);
+    /*pProcess = IntWinProcFindObjectByEprocess(args[3]);
     if (!pProcess)
     {
         ERROR("[DSO] [READ] [ERROR] IntWinProcFindObjectByEprocess failed for Eprocess 0x%016llx with status: 0x%08x",
@@ -4728,7 +4728,7 @@ IntWinNTReadFileCall(
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
-          pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
+          pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");*/
 
 
     return INT_STATUS_SUCCESS;

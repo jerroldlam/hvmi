@@ -4780,7 +4780,7 @@ IntWinNTWriteFileCall(
           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
           pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");*/
 
-    QWORD *CR3;
+    QWORD CR3;
     INTSTATUS status;
     WIN_PROCESS_OBJECT *pProcess = NULL;
 
@@ -4792,7 +4792,7 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    pProcess = IntWinProcFindObjectByCr3(&CR3);
+    pProcess = IntWinProcFindObjectByCr3(CR3);
     if (!pProcess)
     {
         LOG("[DSO] NTWrriteFile failed to get object by CR3 value.");

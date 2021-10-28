@@ -180,6 +180,7 @@ typedef enum
 
     detTagNtReadFile,
     detTagNtWriteFile,
+    detTagNtCreateFile,
 
     detTagSendFile,
     detTagReceiveFile,

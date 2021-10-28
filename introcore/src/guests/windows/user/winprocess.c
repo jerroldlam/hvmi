@@ -4785,7 +4785,7 @@ IntWinNTWriteFileCall(
     WIN_PROCESS_OBJECT *pProcess = NULL;
 
     LOG("[DSO] NTWriteFile called.");
-    status = IntCr3Read(IG_CURRENT_VCPU, *CR3);
+    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
     if (!INT_SUCCESS(status))
     {
         LOG("[DSO] NTWrriteFile failed to get CR3 Value.");

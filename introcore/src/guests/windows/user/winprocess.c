@@ -4750,7 +4750,7 @@ IntWinNTWriteFileCall(
         ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
     }*/
 
-    LOG("[DSO] NTWriteFile called.");
+    //LOG("[DSO] NTWriteFile called.");
     //LOG("Argument 1: 0x%llx\n ", args[0]);
     //LOG("Argument 2: 0x%llx\n ", args[1]);
     //LOG("Argument 3: 0x%llx\n ", args[2]);
@@ -4780,6 +4780,29 @@ IntWinNTWriteFileCall(
           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
           pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");*/
 
+    QWORD *CR3;
+    INTSTATUS status;
+    WIN_PROCESS_OBJECT *pProcess = NULL;
+
+    LOG("[DSO] NTWriteFile called.");
+    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    if (!INT_SUCCESS(status))
+    {
+        LOG("[DSO] NTWrriteFile failed to get CR3 Value.");
+        return INT_STATUS_SUCCESS;
+    }
+
+    pProcess = IntWinProcFindObjectByCr3(&CR3);
+    if (!pProcess)
+    {
+        LOG("[DSO] NTWrriteFile failed to get object by CR3 value.");
+    }
+
+    LOG("[DSO] [WRITE] [PROCESS-DUMP] Swapped in: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+          pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
+          pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
+          pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
 
     return INT_STATUS_SUCCESS;
 }

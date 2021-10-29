@@ -4779,6 +4779,24 @@ IntWinNTWriteFileCall(
 }
 
 INTSTATUS
+IntWinZWWriteFileCall(
+    _In_ void *Detour
+    )
+{
+    LOG("[DSO] ZwWriteFile called.");
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
+IntWinZWReadFileCall(
+    _In_ void *Detour
+    )
+{
+    LOG("[DSO] ZwReadFile called.");
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
 IntWinNTCreateFileCall(
     _In_ void *Detour
     )

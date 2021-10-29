@@ -182,6 +182,9 @@ typedef enum
     detTagNtWriteFile,
     detTagNtCreateFile,
 
+    detTagZwReadFile,
+    detTagZwWriteFile,
+
     detTagSendFile,
     detTagReceiveFile,
 

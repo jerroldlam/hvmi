@@ -594,6 +594,18 @@ IntWinNTWriteFileCall(
     );
 
 INTSTATUS
+IntWinZWReadFileCall(
+    //_In_ WIN_PROCESS_OBJECT *Process
+    _In_ void *Detour
+    );
+
+INTSTATUS
+IntWinZWWriteFileCall(
+    //_In_ WIN_PROCESS_OBJECT *Process
+    _In_ void *Detour
+    );
+
+INTSTATUS
 IntWinNTCreateFileCall(
     //_In_ WIN_PROCESS_OBJECT *Process
     _In_ void *Detour

@@ -4793,13 +4793,13 @@ IntWinNTWriteFileCall(
     //LOG("Buffer Address: 0x%llx\n ", args[5]);
     //LOG("Length: 0x%llx\n ", args[6]);
 
-    status = IntKernVirtMemRead(args[5], args[6], &buffer, &retLength);
-    if (!INT_SUCCESS(status))
-    {
-        ERROR("[ERROR] IntDetGetArgument failed buffer read: 0x%08x\n", status);
-        return INT_STATUS_SUCCESS;
-    }
-    LOG("[DSO] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
+    // status = IntKernVirtMemRead(args[5], args[6], &buffer, &retLength);
+    // if (!INT_SUCCESS(status))
+    // {
+    //     ERROR("[ERROR] IntDetGetArgument failed buffer read: 0x%08x\n", status);
+    //     return INT_STATUS_SUCCESS;
+    // }
+    // LOG("[DSO] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
 
     return INT_STATUS_SUCCESS;
 }

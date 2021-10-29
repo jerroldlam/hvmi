@@ -4709,11 +4709,11 @@ IntWinNTReadFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [NTREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-          cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
-          cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
-          cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
+    // LOG("[DSO] [NTREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+    //       cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
+    //       cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
+    //       cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
 
     pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
     if (!pProcess)
@@ -4722,11 +4722,11 @@ IntWinNTReadFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [NTREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-          pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
-          pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
-          pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
+    // LOG("[DSO] [NTREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+    //       pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
+    //       pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
+    //       pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
 
     return INT_STATUS_SUCCESS;
 }
@@ -4759,11 +4759,11 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [NTWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-          cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
-          cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
-          cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
+    // LOG("[DSO] [NTWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+    //       cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
+    //       cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
+    //       cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
 
     pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
     if (!pProcess)
@@ -4772,11 +4772,11 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [NTWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-          pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
-          pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
-          pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
+    // LOG("[DSO] [NTWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+    //       pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
+    //       pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
+    //       pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
 
     status = IntDetGetArguments(Detour, 7, args);
     if (!INT_SUCCESS(status))

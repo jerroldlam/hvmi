@@ -4709,7 +4709,7 @@ IntWinNTReadFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [READ] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[DSO] [NTREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
           cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
@@ -4722,7 +4722,7 @@ IntWinNTReadFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [READ] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[DSO] [NTREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
@@ -4756,7 +4756,7 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [WRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[DSO] [NTWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
           cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
@@ -4769,7 +4769,7 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [WRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[DSO] [NTWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
@@ -4783,7 +4783,45 @@ IntWinZWWriteFileCall(
     _In_ void *Detour
     )
 {
-    LOG("[DSO] ZwWriteFile called.");
+    QWORD CR3;
+    INTSTATUS status;
+    WIN_PROCESS_OBJECT *cProcess = NULL;
+    WIN_PROCESS_OBJECT *pProcess = NULL;
+
+    LOG("[DSO] ZWWriteFile called.");
+    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    if (!INT_SUCCESS(status))
+    {
+        LOG("[DSO] ZWWrriteFile failed to get CR3 Value.");
+        return INT_STATUS_SUCCESS;
+    }
+
+    cProcess = IntWinProcFindObjectByCr3(CR3);
+    if (!cProcess)
+    {
+        LOG("[DSO] ZWWriteFile failed to get object by CR3 value for child process.");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[DSO] [ZWWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+          cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
+          cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
+          cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
+
+    pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
+    if (!pProcess)
+    {
+        LOG("[DSO] ZWWriteFile failed to get parent object by EPROCESS value.");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[DSO] [ZWWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+          pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
+          pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
+          pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
+
     return INT_STATUS_SUCCESS;
 }
 
@@ -4792,7 +4830,45 @@ IntWinZWReadFileCall(
     _In_ void *Detour
     )
 {
-    LOG("[DSO] ZwReadFile called.");
+    QWORD CR3;
+    INTSTATUS status;
+    WIN_PROCESS_OBJECT *cProcess = NULL;
+    WIN_PROCESS_OBJECT *pProcess = NULL;
+
+    LOG("[DSO] ZWReadFile called.");
+    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    if (!INT_SUCCESS(status))
+    {
+        LOG("[DSO] ZWReadFile failed to get CR3 Value.");
+        return INT_STATUS_SUCCESS;
+    }
+
+    cProcess = IntWinProcFindObjectByCr3(CR3);
+    if (!cProcess)
+    {
+        LOG("[DSO] ZWReadFile failed to get object by CR3 value for child process.");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[DSO] [ZWREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+          cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
+          cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
+          cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
+
+    pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
+    if (!pProcess)
+    {
+        LOG("[DSO] ZWReadFile failed to get parent object by EPROCESS value.");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[DSO] [ZWREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+          pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
+          pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
+          pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
+
     return INT_STATUS_SUCCESS;
 }
 

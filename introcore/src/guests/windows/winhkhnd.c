@@ -5103,7 +5103,7 @@ __section(".detours") =
         },
     },
 
-
+    {
         .ModuleName     = u"ntoskrnl.exe",
         .FunctionName   = "ZwReadFile",
         .MinVersion     = DETOUR_MIN_VERSION_ANY,

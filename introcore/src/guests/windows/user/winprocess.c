@@ -4691,6 +4691,7 @@ IntWinNTReadFileCall(
 {
     QWORD CR3;
     INTSTATUS status;
+    WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
 
     LOG("[DSO] NTReadFile called.");
@@ -4701,13 +4702,27 @@ IntWinNTReadFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    pProcess = IntWinProcFindObjectByCr3(CR3);
-    if (!pProcess)
+    cProcess = IntWinProcFindObjectByCr3(CR3);
+    if (!cProcess)
     {
-        LOG("[DSO] NTReadFile failed to get object by CR3 value.");
+        LOG("[DSO] NTReadFile failed to get object by CR3 value for child process.");
+        return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [READ] [PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[DSO] [READ] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+          cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
+          cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
+          cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
+
+    pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
+    if (!pProcess)
+    {
+        LOG("[DSO] NTReadFile failed to get parent object by EPROCESS value.");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[DSO] [READ] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
@@ -4723,6 +4738,7 @@ IntWinNTWriteFileCall(
 {
     QWORD CR3;
     INTSTATUS status;
+    WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
 
     LOG("[DSO] NTWriteFile called.");
@@ -4733,10 +4749,24 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    pProcess = IntWinProcFindObjectByCr3(CR3);
+    cProcess = IntWinProcFindObjectByCr3(CR3);
+    if (!cProcess)
+    {
+        LOG("[DSO] NTWriteFile failed to get object by CR3 value for child process.");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[DSO] [WRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+          "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+          cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
+          cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
+          cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
+
+    pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
     if (!pProcess)
     {
-        LOG("[DSO] NTWrriteFile failed to get object by CR3 value.");
+        LOG("[DSO] NTWriteFile failed to get parent object by EPROCESS value.");
+        return INT_STATUS_SUCCESS;
     }
 
     LOG("[DSO] [WRITE] [PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
@@ -4753,7 +4783,7 @@ IntWinNTCreateFileCall(
     _In_ void *Detour
     )
 {
-    LOG("[DSO] NTCreateFile called.");
+    //LOG("[DSO] NTCreateFile called.");
     return INT_STATUS_SUCCESS;
 }
 

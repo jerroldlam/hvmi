@@ -4785,13 +4785,13 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    //LOG("RCX: 0x%llx\n ", args[0]);
-    //LOG("RDX: 0x%llx\n ", args[1]);
-    //LOG("R8 : 0x%llx\n ", args[2]);
-    //LOG("R9 : 0x%llx\n ", args[3]);
-    //LOG("IO Status Block: 0x%llx\n ", args[4]);
-    //LOG("Buffer Address: 0x%llx\n ", args[5]);
-    //LOG("Length: 0x%llx\n ", args[6]);
+    LOG("RCX: 0x%llx\n ", args[0]);
+    LOG("RDX: 0x%llx\n ", args[1]);
+    LOG("R8 : 0x%llx\n ", args[2]);
+    LOG("R9 : 0x%llx\n ", args[3]);
+    LOG("IO Status Block: 0x%llx\n ", args[4]);
+    LOG("Buffer Address: 0x%llx\n ", args[5]);
+    LOG("Length: 0x%llx\n ", args[6]);
 
     // status = IntKernVirtMemRead(args[5], args[6], &buffer, &retLength);
     // if (!INT_SUCCESS(status))

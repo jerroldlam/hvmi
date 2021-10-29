@@ -4740,6 +4740,9 @@ IntWinNTWriteFileCall(
     INTSTATUS status;
     WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
+    QWORD args[7];
+    QWORD buffer;
+    DWORD retLength;
 
     LOG("[DSO] NTWriteFile called.");
     status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
@@ -4774,6 +4777,29 @@ IntWinNTWriteFileCall(
           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
           pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
+
+    status = IntDetGetArguments(Detour, 7, args);
+    if (!INT_SUCCESS(status))
+    {
+        ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+        return INT_STATUS_SUCCESS;
+    }
+
+    //LOG("RCX: 0x%llx\n ", args[0]);
+    //LOG("RDX: 0x%llx\n ", args[1]);
+    //LOG("R8 : 0x%llx\n ", args[2]);
+    //LOG("R9 : 0x%llx\n ", args[3]);
+    //LOG("IO Status Block: 0x%llx\n ", args[4]);
+    //LOG("Buffer Address: 0x%llx\n ", args[5]);
+    //LOG("Length: 0x%llx\n ", args[6]);
+
+    status = IntKernVirtMemRead(args[5], args[6], &buffer, &retLength);
+    if (!INT_SUCCESS(status))
+    {
+        ERROR("[ERROR] IntDetGetArgument failed buffer read: 0x%08x\n", status);
+        return INT_STATUS_SUCCESS;
+    }
+    LOG("[DSO] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
 
     return INT_STATUS_SUCCESS;
 }

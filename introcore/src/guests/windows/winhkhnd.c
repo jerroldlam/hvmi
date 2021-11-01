@@ -5038,7 +5038,7 @@ __section(".detours") =
         .NotCritical    = FALSE,
         .DisableFlags   = 0,
         .EnableFlags    = DETOUR_ENABLE_ALWAYS,
-        .Arguments      = DET_ARGS_DEFAULT_NTCALLS,
+        .Arguments      = DET_ARGS_DEFAULT_WIN86,
         .HandlersCount  = 1,
         .Handlers       =
         {

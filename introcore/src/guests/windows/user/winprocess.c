@@ -4695,38 +4695,38 @@ IntWinNTReadFileCall(
     WIN_PROCESS_OBJECT *pProcess = NULL;
 
     LOG("[DSO] NTReadFile called.");
-    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
-    if (!INT_SUCCESS(status))
-    {
-        LOG("[DSO] NTReadFile failed to get CR3 Value.");
-        return INT_STATUS_SUCCESS;
-    }
+    //status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    //if (!INT_SUCCESS(status))
+    //{
+    //    LOG("[DSO] NTReadFile failed to get CR3 Value.");
+    //    return INT_STATUS_SUCCESS;
+    //}
 
-    cProcess = IntWinProcFindObjectByCr3(CR3);
-    if (!cProcess)
-    {
-        LOG("[DSO] NTReadFile failed to get object by CR3 value for child process.");
-        return INT_STATUS_SUCCESS;
-    }
+    //cProcess = IntWinProcFindObjectByCr3(CR3);
+    //if (!cProcess)
+    //{
+    //    LOG("[DSO] NTReadFile failed to get object by CR3 value for child process.");
+    //    return INT_STATUS_SUCCESS;
+    //}
 
-     LOG("[DSO] [NTREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-           cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
-           cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
-           cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
+    // LOG("[DSO] [NTREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+    //       cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
+    //       cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
+    //       cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
 
-    pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
-    if (!pProcess)
-    {
-        LOG("[DSO] NTReadFile failed to get parent object by EPROCESS value.");
-        return INT_STATUS_SUCCESS;
-    }
+    //pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
+    //if (!pProcess)
+    //{
+    //    LOG("[DSO] NTReadFile failed to get parent object by EPROCESS value.");
+    //    return INT_STATUS_SUCCESS;
+    //}
 
-     LOG("[DSO] [NTREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
-           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
-           pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
+    // LOG("[DSO] [NTREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+    //       pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
+    //       pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
+    //       pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
 
     return INT_STATUS_SUCCESS;
 }
@@ -4785,10 +4785,10 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("RCX: 0x%llx\n ", args[0]);
-    LOG("RDX: 0x%llx\n ", args[1]);
-    LOG("R8 : 0x%llx\n ", args[2]);
-    LOG("R9 : 0x%llx\n ", args[3]);
+    LOG("Stack 1: 0x%llx\n ", args[0]);
+    LOG("Stack 2: 0x%llx\n ", args[1]);
+    LOG("Stack 3 : 0x%llx\n ", args[2]);
+    LOG("Stack 4 : 0x%llx\n ", args[3]);
     LOG("IO Status Block: 0x%llx\n ", args[4]);
     LOG("Buffer Address: 0x%llx\n ", args[5]);
     LOG("Length: 0x%llx\n ", args[6]);

@@ -4743,7 +4743,7 @@ IntWinNTWriteFileCall(
     QWORD args[7];
     QWORD buffer;
     QWORD tempBuffer;
-    DWORD bufferLength;
+    ULONG bufferLength;
     //DWORD bitMask32 = 0xFFFFFFFF;
     DWORD retLength;
 
@@ -4788,13 +4788,13 @@ IntWinNTWriteFileCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("Stack 1: 0x%llx\n ", args[0]);
-    LOG("Stack 2: 0x%llx\n ", args[1]);
-    LOG("Stack 3 : 0x%llx\n ", args[2]);
-    LOG("Stack 4 : 0x%llx\n ", args[3]);
-    LOG("IO Status Block: 0x%llx\n ", args[4]);
-    LOG("Buffer Address: 0x%llx\n ", args[5]);
-    LOG("Length (QWORD): 0x%llx\n ", args[6]); //in qword
+    //LOG("Stack 1: 0x%llx\n ", args[0]);
+    //LOG("Stack 2: 0x%llx\n ", args[1]);
+    //LOG("Stack 3 : 0x%llx\n ", args[2]);
+    //LOG("Stack 4 : 0x%llx\n ", args[3]);
+    //LOG("IO Status Block: 0x%llx\n ", args[4]);
+    //LOG("Buffer Address: 0x%llx\n ", args[5]);
+    //LOG("Length (QWORD): 0x%llx\n ", args[6]); //in qword
 
     /*tempBuffer = args[6] << 32;
     args[6] = args[6] >> 32;*/
@@ -4805,7 +4805,7 @@ IntWinNTWriteFileCall(
      status = IntKernVirtMemRead(args[5], bufferLength, &buffer, &retLength);
      if (!INT_SUCCESS(status))
      {
-         ERROR("[ERROR] IntDetGetArgument failed buffer read: 0x%08x\n", status);
+         ERROR("[ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
          return INT_STATUS_SUCCESS;
      }
      LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);

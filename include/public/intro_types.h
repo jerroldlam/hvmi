@@ -48,6 +48,8 @@ typedef uint8_t                 BYTE, *PBYTE;
 typedef uint16_t                WORD, *PWORD;
 typedef uint32_t                DWORD, *PDWORD;
 
+typedef unsigned long           ULONG, *PULONG;
+
 // If we don't define 64-bit types to `long long`, we have a problem with string formatting, since
 // `%lx` should be used on gnu, and `%llx` on MSVC
 typedef unsigned long long      QWORD, *PQWORD;

@@ -4742,6 +4742,7 @@ IntWinNTWriteFileCall(
     WIN_PROCESS_OBJECT *pProcess = NULL;
     QWORD args[7];
     QWORD buffer;
+    QWORD tempBuffer;
     DWORD bufferLength;
     //DWORD bitMask32 = 0xFFFFFFFF;
     DWORD retLength;
@@ -4795,11 +4796,11 @@ IntWinNTWriteFileCall(
     LOG("Buffer Address: 0x%llx\n ", args[5]);
     LOG("Length (QWORD): 0x%llx\n ", args[6]); //in qword
 
-    args[6] = args[6] << 32;
-    args[6] = args[6] >> 32;
-    bufferLength = args[6];
+    /*tempBuffer = args[6] << 32;
+    args[6] = args[6] >> 32;*/
+    bufferLength = args[6] & &hFFFFFFFF;
     
-    LOG("Length (DWORD): 0x%llx\n ", bufferLength);
+    LOG("Length (DWORD): 0x%lu\n ", bufferLength);
 
     // status = IntKernVirtMemRead(args[5], args[6], &buffer, &retLength);
     // if (!INT_SUCCESS(status))

@@ -4800,15 +4800,15 @@ IntWinNTWriteFileCall(
     args[6] = args[6] >> 32;*/
     bufferLength = args[6] & 0xFFFFFFFF;
     
-    LOG("Length (DWORD): 0x%lu\n ", bufferLength);
+    /*LOG("Length (DWORD): 0x%lu\n ", bufferLength);*/
 
-    // status = IntKernVirtMemRead(args[5], args[6], &buffer, &retLength);
-    // if (!INT_SUCCESS(status))
-    // {
-    //     ERROR("[ERROR] IntDetGetArgument failed buffer read: 0x%08x\n", status);
-    //     return INT_STATUS_SUCCESS;
-    // }
-    // LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
+     status = IntKernVirtMemRead(args[5], bufferLength, &buffer, &retLength);
+     if (!INT_SUCCESS(status))
+     {
+         ERROR("[ERROR] IntDetGetArgument failed buffer read: 0x%08x\n", status);
+         return INT_STATUS_SUCCESS;
+     }
+     LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
 
     return INT_STATUS_SUCCESS;
 }

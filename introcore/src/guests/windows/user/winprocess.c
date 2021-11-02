@@ -4743,7 +4743,7 @@ IntWinNTWriteFileCall(
     QWORD args[7];
     QWORD buffer;
     DWORD bufferLength;
-    DWORD bitMask32 = 0xFFFFFFFF;
+    //DWORD bitMask32 = 0xFFFFFFFF;
     DWORD retLength;
 
     LOG("[MOD] NTWriteFile called.");
@@ -4795,7 +4795,9 @@ IntWinNTWriteFileCall(
     LOG("Buffer Address: 0x%llx\n ", args[5]);
     LOG("Length (QWORD): 0x%llx\n ", args[6]); //in qword
 
-    bufferLength = args[6] & bitMask32;
+    bufferLength = args[6] << 32;
+    bufferLength = bufferLength >> 32;
+    
     LOG("Length (DWORD): 0x%llx\n ", bufferLength);
 
     // status = IntKernVirtMemRead(args[5], args[6], &buffer, &retLength);

@@ -4798,7 +4798,7 @@ IntWinNTWriteFileCall(
 
     /*tempBuffer = args[6] << 32;
     args[6] = args[6] >> 32;*/
-    bufferLength = args[6] & 0xFFFFFFFF;
+    bufferLength = args[6] & 0x00000000ffffffff;
     
     /*LOG("Length (DWORD): 0x%lu\n ", bufferLength);*/
 

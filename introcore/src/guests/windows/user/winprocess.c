@@ -4794,21 +4794,21 @@ IntWinNTWriteFileCall(
     //LOG("Stack 4 : 0x%llx\n ", args[3]);
     //LOG("IO Status Block: 0x%llx\n ", args[4]);
     //LOG("Buffer Address: 0x%llx\n ", args[5]);
-    //LOG("Length (QWORD): 0x%llx\n ", args[6]); //in qword
+    LOG("Length (QWORD): 0x%llx\n ", args[6]); //in qword
 
     /*tempBuffer = args[6] << 32;
     args[6] = args[6] >> 32;*/
     bufferLength = args[6] & 0x00000000ffffffff;
     
-    /*LOG("Length (DWORD): 0x%lu\n ", bufferLength);*/
+    LOG("Length (DWORD): 0x%lu\n ", bufferLength);
 
-     status = IntKernVirtMemRead(args[5], bufferLength, &buffer, &retLength);
-     if (!INT_SUCCESS(status))
-     {
-         ERROR("[ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
-         return INT_STATUS_SUCCESS;
-     }
-     LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
+     //status = IntKernVirtMemRead(args[5], bufferLength, &buffer, &retLength);
+     //if (!INT_SUCCESS(status))
+     //{
+     //    ERROR("[ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
+     //    return INT_STATUS_SUCCESS;
+     //}
+     //LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
 
     return INT_STATUS_SUCCESS;
 }

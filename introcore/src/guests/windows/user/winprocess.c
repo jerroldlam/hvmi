@@ -4795,8 +4795,9 @@ IntWinNTWriteFileCall(
     LOG("Buffer Address: 0x%llx\n ", args[5]);
     LOG("Length (QWORD): 0x%llx\n ", args[6]); //in qword
 
-    bufferLength = args[6] << 32;
-    bufferLength = bufferLength >> 32;
+    args[6] = args[6] << 32;
+    args[6] = args[6] >> 32;
+    bufferLength = args[6];
     
     LOG("Length (DWORD): 0x%llx\n ", bufferLength);
 

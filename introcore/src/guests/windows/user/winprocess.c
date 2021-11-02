@@ -4694,22 +4694,22 @@ IntWinNTReadFileCall(
     WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
 
-    LOG("[DSO] NTReadFile called.");
+    LOG("[MOD] NTReadFile called.");
     //status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
     //if (!INT_SUCCESS(status))
     //{
-    //    LOG("[DSO] NTReadFile failed to get CR3 Value.");
+    //    LOG("[MOD] NTReadFile failed to get CR3 Value.");
     //    return INT_STATUS_SUCCESS;
     //}
 
     //cProcess = IntWinProcFindObjectByCr3(CR3);
     //if (!cProcess)
     //{
-    //    LOG("[DSO] NTReadFile failed to get object by CR3 value for child process.");
+    //    LOG("[MOD] NTReadFile failed to get object by CR3 value for child process.");
     //    return INT_STATUS_SUCCESS;
     //}
 
-    // LOG("[DSO] [NTREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    // LOG("[MOD] [NTREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
     //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
     //       cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
     //       cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
@@ -4718,11 +4718,11 @@ IntWinNTReadFileCall(
     //pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
     //if (!pProcess)
     //{
-    //    LOG("[DSO] NTReadFile failed to get parent object by EPROCESS value.");
+    //    LOG("[MOD] NTReadFile failed to get parent object by EPROCESS value.");
     //    return INT_STATUS_SUCCESS;
     //}
 
-    // LOG("[DSO] [NTREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    // LOG("[MOD] [NTREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
     //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
     //       pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
     //       pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
@@ -4742,24 +4742,26 @@ IntWinNTWriteFileCall(
     WIN_PROCESS_OBJECT *pProcess = NULL;
     QWORD args[7];
     QWORD buffer;
+    DWORD bufferLength;
+    DWORD bitMask32 = 0xFFFFFFFF;
     DWORD retLength;
 
-    LOG("[DSO] NTWriteFile called.");
+    LOG("[MOD] NTWriteFile called.");
     status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
     if (!INT_SUCCESS(status))
     {
-        LOG("[DSO] NTWrriteFile failed to get CR3 Value.");
+        LOG("[MOD] NTWrriteFile failed to get CR3 Value.");
         return INT_STATUS_SUCCESS;
     }
 
     cProcess = IntWinProcFindObjectByCr3(CR3);
     if (!cProcess)
     {
-        LOG("[DSO] NTWriteFile failed to get object by CR3 value for child process.");
+        LOG("[MOD] NTWriteFile failed to get object by CR3 value for child process.");
         return INT_STATUS_SUCCESS;
     }
 
-     LOG("[DSO] [NTWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+     LOG("[MOD] [NTWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
            "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
            cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
            cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
@@ -4768,11 +4770,11 @@ IntWinNTWriteFileCall(
     pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
     if (!pProcess)
     {
-        LOG("[DSO] NTWriteFile failed to get parent object by EPROCESS value.");
+        LOG("[MOD] NTWriteFile failed to get parent object by EPROCESS value.");
         return INT_STATUS_SUCCESS;
     }
 
-     LOG("[DSO] [NTWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+     LOG("[MOD] [NTWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
            "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
            pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
            pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
@@ -4791,7 +4793,10 @@ IntWinNTWriteFileCall(
     LOG("Stack 4 : 0x%llx\n ", args[3]);
     LOG("IO Status Block: 0x%llx\n ", args[4]);
     LOG("Buffer Address: 0x%llx\n ", args[5]);
-    LOG("Length: 0x%llx\n ", args[6]);
+    LOG("Length (QWORD): 0x%llx\n ", args[6]); //in qword
+
+    bufferLength = args[6] & bitMask32;
+    LOG("Length (DWORD): 0x%llx\n ", bufferLength);
 
     // status = IntKernVirtMemRead(args[5], args[6], &buffer, &retLength);
     // if (!INT_SUCCESS(status))
@@ -4799,7 +4804,7 @@ IntWinNTWriteFileCall(
     //     ERROR("[ERROR] IntDetGetArgument failed buffer read: 0x%08x\n", status);
     //     return INT_STATUS_SUCCESS;
     // }
-    // LOG("[DSO] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
+    // LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
 
     return INT_STATUS_SUCCESS;
 }
@@ -4814,22 +4819,22 @@ IntWinZWWriteFileCall(
     WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
 
-    LOG("[DSO] ZWWriteFile called.");
+    LOG("[MOD] ZWWriteFile called.");
     status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
     if (!INT_SUCCESS(status))
     {
-        LOG("[DSO] ZWWrriteFile failed to get CR3 Value.");
+        LOG("[MOD] ZWWrriteFile failed to get CR3 Value.");
         return INT_STATUS_SUCCESS;
     }
 
     cProcess = IntWinProcFindObjectByCr3(CR3);
     if (!cProcess)
     {
-        LOG("[DSO] ZWWriteFile failed to get object by CR3 value for child process.");
+        LOG("[MOD] ZWWriteFile failed to get object by CR3 value for child process.");
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [ZWWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[MOD] [ZWWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
           cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
@@ -4838,11 +4843,11 @@ IntWinZWWriteFileCall(
     pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
     if (!pProcess)
     {
-        LOG("[DSO] ZWWriteFile failed to get parent object by EPROCESS value.");
+        LOG("[MOD] ZWWriteFile failed to get parent object by EPROCESS value.");
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [ZWWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[MOD] [ZWWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
@@ -4861,22 +4866,22 @@ IntWinZWReadFileCall(
     WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
 
-    LOG("[DSO] ZWReadFile called.");
+    LOG("[MOD] ZWReadFile called.");
     status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
     if (!INT_SUCCESS(status))
     {
-        LOG("[DSO] ZWReadFile failed to get CR3 Value.");
+        LOG("[MOD] ZWReadFile failed to get CR3 Value.");
         return INT_STATUS_SUCCESS;
     }
 
     cProcess = IntWinProcFindObjectByCr3(CR3);
     if (!cProcess)
     {
-        LOG("[DSO] ZWReadFile failed to get object by CR3 value for child process.");
+        LOG("[MOD] ZWReadFile failed to get object by CR3 value for child process.");
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [ZWREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[MOD] [ZWREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
           cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
@@ -4885,11 +4890,11 @@ IntWinZWReadFileCall(
     pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
     if (!pProcess)
     {
-        LOG("[DSO] ZWReadFile failed to get parent object by EPROCESS value.");
+        LOG("[MOD] ZWReadFile failed to get parent object by EPROCESS value.");
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[DSO] [ZWREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[MOD] [ZWREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
@@ -4903,7 +4908,7 @@ IntWinNTCreateFileCall(
     _In_ void *Detour
     )
 {
-    //LOG("[DSO] NTCreateFile called.");
+    //LOG("[MOD] NTCreateFile called.");
     return INT_STATUS_SUCCESS;
 }
 
@@ -4912,7 +4917,7 @@ IntWinNTReadFileInit(
     void
     )
 {
-    LOG("[DSO] NTReadFile is hooking.");
+    LOG("[MOD] NTReadFile is hooking.");
     return INT_STATUS_SUCCESS;
 }
 
@@ -4921,7 +4926,7 @@ IntWinNTWriteFileInit(
     void
     )
 {
-    LOG("[DSO] NTWriteFile is hooking.");
+    LOG("[MOD] NTWriteFile is hooking.");
     return INT_STATUS_SUCCESS;
 }
 
@@ -4930,7 +4935,7 @@ IntWinNTCreateFileInit(
     void
     )
 {
-    LOG("[DSO] NTCreateFile is hooking.");
+    LOG("[MOD] NTCreateFile is hooking.");
     return INT_STATUS_SUCCESS;
 }
 
@@ -4939,7 +4944,7 @@ IntWinSendCall(
     void
     )
 {
-    LOG("[DSO] ndis Send called");
+    LOG("[MOD] ndis Send called");
     return INT_STATUS_SUCCESS;
 }
 
@@ -4948,6 +4953,6 @@ IntWinReceiveCall(
     void
     )
 {
-    LOG("[DSO] ndis Receive called");
+    LOG("[MOD] ndis Receive called");
     return INT_STATUS_SUCCESS;
 }

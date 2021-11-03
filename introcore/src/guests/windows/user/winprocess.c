@@ -4807,7 +4807,7 @@ IntWinNTWriteFileCall(
          ERROR("[ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
          return INT_STATUS_SUCCESS;
      }
-     LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
+     LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
 
     return INT_STATUS_SUCCESS;
 }

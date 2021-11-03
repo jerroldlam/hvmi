@@ -4741,10 +4741,7 @@ IntWinNTWriteFileCall(
     WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
     QWORD args[7];
-    QWORD buffer;
-    QWORD tempBuffer;
     ULONG bufferLength;
-    //DWORD bitMask32 = 0xFFFFFFFF;
     DWORD retLength;
 
     LOG("[MOD] NTWriteFile called.");
@@ -4800,15 +4797,17 @@ IntWinNTWriteFileCall(
     args[6] = args[6] >> 32;*/
     bufferLength = args[6] & 0x00000000ffffffff;
     
-    LOG("Length (DWORD): 0x%lu\n ", bufferLength);
+    LOG("Length (DWORD): %lu bytes\n ", bufferLength);
 
-     //status = IntKernVirtMemRead(args[5], bufferLength, &buffer, &retLength);
-     //if (!INT_SUCCESS(status))
-     //{
-     //    ERROR("[ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
-     //    return INT_STATUS_SUCCESS;
-     //}
-     //LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
+    char buffer[bufferLength];
+
+     status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
+     if (!INT_SUCCESS(status))
+     {
+         ERROR("[ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
+         return INT_STATUS_SUCCESS;
+     }
+     LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : 0x%llx\n", buffer);
 
     return INT_STATUS_SUCCESS;
 }

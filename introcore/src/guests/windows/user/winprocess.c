@@ -4689,10 +4689,10 @@ IntWinNTReadFileCall(
     _In_ void *Detour
     )
 {
-    QWORD CR3;
-    INTSTATUS status;
-    WIN_PROCESS_OBJECT *cProcess = NULL;
-    WIN_PROCESS_OBJECT *pProcess = NULL;
+    //QWORD CR3;
+    //INTSTATUS status;
+    //WIN_PROCESS_OBJECT *cProcess = NULL;
+    //WIN_PROCESS_OBJECT *pProcess = NULL;
 
     LOG("[MOD] NTReadFile called.");
     //status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
@@ -4769,14 +4769,17 @@ IntWinNTWriteFileCall(
     if (!pProcess)
     {
         LOG("[MOD] NTWriteFile failed to get parent object by EPROCESS value.");
-        return INT_STATUS_SUCCESS;
+        
     }
-
-     LOG("[MOD] [NTWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    else
+    {
+        LOG("[MOD] [NTWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
            "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
            pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
            pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
            pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
+    }
+     
 
     status = IntDetGetArguments(Detour, 7, args);
     if (!INT_SUCCESS(status))
@@ -4784,6 +4787,22 @@ IntWinNTWriteFileCall(
         ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
         return INT_STATUS_SUCCESS;
     }
+    else
+    {
+        bufferLength = args[6] & 0x00000000ffffffff;
+        LOG("Buffer Length : %lu bytes\n ", bufferLength);
+        char buffer[bufferLength];
+
+        status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
+         if (!INT_SUCCESS(status))
+         {
+             ERROR("[ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
+             return INT_STATUS_SUCCESS;
+         }
+         LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
+    }
+
+    return INT_STATUS_SUCCESS;
 
     //LOG("Stack 1: 0x%llx\n ", args[0]);
     //LOG("Stack 2: 0x%llx\n ", args[1]);
@@ -4791,25 +4810,7 @@ IntWinNTWriteFileCall(
     //LOG("Stack 4 : 0x%llx\n ", args[3]);
     //LOG("IO Status Block: 0x%llx\n ", args[4]);
     //LOG("Buffer Address: 0x%llx\n ", args[5]);
-    LOG("Length (QWORD): 0x%llx\n ", args[6]); //in qword
-
-    /*tempBuffer = args[6] << 32;
-    args[6] = args[6] >> 32;*/
-    bufferLength = args[6] & 0x00000000ffffffff;
-    
-    LOG("Length (DWORD): %lu bytes\n ", bufferLength);
-
-    char buffer[bufferLength];
-
-     status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
-     if (!INT_SUCCESS(status))
-     {
-         ERROR("[ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
-         return INT_STATUS_SUCCESS;
-     }
-     LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
-
-    return INT_STATUS_SUCCESS;
+    //LOG("Length (QWORD): 0x%llx\n ", args[6]); //in qword
 }
 
 INTSTATUS

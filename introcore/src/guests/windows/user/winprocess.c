@@ -4812,8 +4812,8 @@ IntWinNTWriteFileCall(
         {
              //Possible failure due to the required memory (at any level being missing).
              //Error code : 0xe2400013
-             //Force read with #PFs, but might cause crash due if memory to be read is invalid.
-             ERROR("[MOD] [ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
+             //Force read with #PFs, but might cause crash due if memory to be read is invalid. (Invalid bit set)
+             //ERROR("[MOD] [ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
 
              //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
              //Preinject and swaphandle not needed as logging can be done in callback
@@ -4941,15 +4941,14 @@ IntWinLogWriteCall(
     UNREFERENCED_PARAMETER(Context);
     UNREFERENCED_PARAMETER(Cr3);
     UNREFERENCED_PARAMETER(VirtualAddress);
-    UNREFERENCED_PARAMETER(PhysicalAddress);
-    UNREFERENCED_PARAMETER(DataSize);
+    UNREFERENCED_PARAMETER(Data);
     UNREFERENCED_PARAMETER(Flags);
 
-    status = IntKernVirtMemRead(VirtualAddress, DataSize, buffer, &retLength);
+    status = IntPhysicalMemReadAnySize(PhysicalAddress, DataSize, buffer, &retLength);
     if (!INT_SUCCESS(status))
         {
              //Failure after swapping in, end introspection
-             ERROR("[MOD] [ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
+             ERROR("[MOD] [ERROR] IntPhysMemReadAnySize failed buffer read: 0x%08x\n", status);
              return INT_STATUS_SUCCESS;
         }
         LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);

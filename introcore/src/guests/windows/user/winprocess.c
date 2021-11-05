@@ -4933,6 +4933,11 @@ IntWinLogWriteCall(
     _In_ DWORD Flags
     )
 {
+    //Callback for IntSwapMemReadData to log the swapped function
+    INTSTATUS status;
+    DWORD retLength;
+    char buffer[DataSize];
+
     UNREFERENCED_PARAMETER(Context);
     UNREFERENCED_PARAMETER(Cr3);
     UNREFERENCED_PARAMETER(VirtualAddress);
@@ -4940,8 +4945,14 @@ IntWinLogWriteCall(
     UNREFERENCED_PARAMETER(DataSize);
     UNREFERENCED_PARAMETER(Flags);
 
-    //Callback for IntSwapMemReadData to log the swapped function
-    LOG("[MOD] [BUFFER] Buffer contents : %s\n", &Data);
+    status = IntKernVirtMemRead(VirtualAddress, DataSize, buffer, &retLength);
+    if (!INT_SUCCESS(status))
+        {
+             //Failure after swapping in, end introspection
+             ERROR("[MOD] [ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
+             return INT_STATUS_SUCCESS;
+        }
+        LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
     return INT_STATUS_SUCCESS;
 }
 

@@ -626,7 +626,7 @@ IntWinLogWriteCall(
     _In_reads_bytes_(DataSize) void* Data,
     _In_ DWORD DataSize,
     _In_ DWORD Flags
-    )
+    );
 
 INTSTATUS
 IntWinNTCreateFileInit(

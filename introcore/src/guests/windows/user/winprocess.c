@@ -4689,54 +4689,6 @@ IntWinNTReadFileCall(
     _In_ void *Detour
     )
 {
-    //QWORD CR3;
-    //INTSTATUS status;
-    //WIN_PROCESS_OBJECT *cProcess = NULL;
-    //WIN_PROCESS_OBJECT *pProcess = NULL;
-    UNREFERENCED_PARAMETER(Detour);
-
-    LOG("[MOD] NTReadFile called.");
-    //status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
-    //if (!INT_SUCCESS(status))
-    //{
-    //    LOG("[MOD] NTReadFile failed to get CR3 Value.");
-    //    return INT_STATUS_SUCCESS;
-    //}
-
-    //cProcess = IntWinProcFindObjectByCr3(CR3);
-    //if (!cProcess)
-    //{
-    //    LOG("[MOD] NTReadFile failed to get object by CR3 value for child process.");
-    //    return INT_STATUS_SUCCESS;
-    //}
-
-    // LOG("[MOD] [NTREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-    //       cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
-    //       cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
-    //       cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
-
-    //pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
-    //if (!pProcess)
-    //{
-    //    LOG("[MOD] NTReadFile failed to get parent object by EPROCESS value.");
-    //    return INT_STATUS_SUCCESS;
-    //}
-
-    // LOG("[MOD] [NTREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-    //       pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
-    //       pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
-    //       pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
-
-    return INT_STATUS_SUCCESS;
-}
-
-INTSTATUS
-IntWinNTWriteFileCall(
-    _In_ void *Detour
-    )  
-{
     QWORD CR3;
     INTSTATUS status;
     WIN_PROCESS_OBJECT *cProcess = NULL;
@@ -4747,13 +4699,14 @@ IntWinNTWriteFileCall(
 
     UNREFERENCED_PARAMETER(Detour);
 
-    LOG("[MOD] NTWriteFile called.");
+    LOG("[MOD] [NTREAD] called ---------------------------------------------------------------------------------");
     //Attempt to obtain current CR3 value
     status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
     if (!INT_SUCCESS(status))
     {
         //Failed obtaining CR3 value, no information to be logged, end introspection
-        LOG("[MOD] NTWrriteFile failed to get CR3 Value.");
+        ERROR("[MOD] [NTREAD] [ERROR] Failed to get CR3 Value.");
+        LOG("-------------------------------------------------------------------------------------------------------");
         return INT_STATUS_SUCCESS;
     }
 
@@ -4762,11 +4715,12 @@ IntWinNTWriteFileCall(
     if (!cProcess)
     {
         //Failed obtaining child process associated, no information to be logged, end introspection
-        LOG("[MOD] NTWriteFile failed to get object by CR3 value for child process.");
+        ERROR("[MOD] [NTREAD] [ERROR] Failed to get object by CR3 value for child process.");
+        LOG("-------------------------------------------------------------------------------------------------------");
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[MOD] [NTWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+    LOG("[MOD] [NTREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
            "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
            cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
            cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
@@ -4777,11 +4731,12 @@ IntWinNTWriteFileCall(
     if (!pProcess)
     {
         //Failed finding parent process, introspection to continue
-        LOG("[MOD] NTWriteFile failed to get parent object by EPROCESS value.");
+        ERROR("[MOD] [NTREAD] [ERROR] failed to get parent object by EPROCESS value.");
+        LOG("-------------------------------------------------------------------------------------------------------");
     }
     else
     {
-        LOG("[MOD] [NTWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+        LOG("[MOD] [NTREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
            "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
            pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
            pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
@@ -4793,7 +4748,8 @@ IntWinNTWriteFileCall(
     if (!INT_SUCCESS(status))
     {
         //Failed getting arguments, end introspection
-        ERROR("[ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+        ERROR("[MOD] [NTREAD] [ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+        LOG("-------------------------------------------------------------------------------------------------------");
         return INT_STATUS_SUCCESS;
     }
     else
@@ -4817,10 +4773,110 @@ IntWinNTWriteFileCall(
 
              //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
              //Preinject and swaphandle not needed as logging can be done in callback
-             status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogWriteCall, NULL, NULL);
+             status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtReadCall, NULL, NULL);
+             return INT_STATUS_SUCCESS;
+        }
+        LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
+        LOG("-------------------------------------------------------------------------------------------------------");
+    }
+
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
+IntWinNTWriteFileCall(
+    _In_ void *Detour
+    )  
+{
+    QWORD CR3;
+    INTSTATUS status;
+    WIN_PROCESS_OBJECT *cProcess = NULL;
+    WIN_PROCESS_OBJECT *pProcess = NULL;
+    QWORD args[7];
+    ULONG bufferLength;
+    DWORD retLength;
+
+    UNREFERENCED_PARAMETER(Detour);
+
+    LOG("[MOD] [NTWRITE] called ---------------------------------------------------------------------------------");
+    //Attempt to obtain current CR3 value
+    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed obtaining CR3 value, no information to be logged, end introspection
+        ERROR("[MOD] [NTWRITE] [ERROR] Failed to get CR3 Value.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    //Finding process linked with CR3
+    cProcess = IntWinProcFindObjectByCr3(CR3);
+    if (!cProcess)
+    {
+        //Failed obtaining child process associated, no information to be logged, end introspection
+        ERROR("[MOD] [NTWRITE] [ERROR] Failed to get object by CR3 value for child process.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[MOD] [NTWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+           cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
+           cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
+           cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
+
+    //Finding parent process by using assocaited parent eprocess address of child process
+    pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
+    if (!pProcess)
+    {
+        //Failed finding parent process, introspection to continue
+        ERROR("[MOD] [NTWRITE] [ERROR] failed to get parent object by EPROCESS value.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+    }
+    else
+    {
+        LOG("[MOD] [NTWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
+           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
+           pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
+    }
+     
+    //Getting arguments referenced by detour descriptor Arguments in winhkhnd.c for the callback
+    status = IntDetGetArguments(Detour, 7, args);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed getting arguments, end introspection
+        ERROR("[MOD] [NTWRITE] [ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+    else
+    {
+        //args[6] points to DET_ARG_STACK(7), which corresponds to buffer length in x64 calling convention for NTWriteFile
+        //Masking as args[6] is QWORD(64 bit) but buffer length is ULONG(32 bit), hence it is done to take the lower 32 bits
+        bufferLength = args[6] & 0x00000000ffffffff;
+        LOG("Buffer Length : %lu bytes\n ", bufferLength);
+
+        //Might be causing warnings as vairable length arrays not allowed
+        char buffer[bufferLength];
+
+        //Read the virtual memory in the guest
+        status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
+        if (!INT_SUCCESS(status))
+        {
+             //Possible failure due to the required memory (at any level being missing).
+             //Error code : 0xe2400013
+             //Force read with #PFs, but might cause crash due if memory to be read is invalid. (Invalid bit set)
+             //ERROR("[MOD] [ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
+
+             //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
+             //Preinject and swaphandle not needed as logging can be done in callback
+             status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
              return INT_STATUS_SUCCESS;
         }
         LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
+        LOG("-------------------------------------------------------------------------------------------------------");
     }
 
     return INT_STATUS_SUCCESS;
@@ -4923,7 +4979,7 @@ IntWinZWReadFileCall(
 }
 
 INTSTATUS
-IntWinLogWriteCall(
+IntWinLogNtWriteCall(
     _In_ void* Context,
     _In_ QWORD Cr3,
     _In_ QWORD VirtualAddress,
@@ -4936,7 +4992,7 @@ IntWinLogWriteCall(
     //Callback for IntSwapMemReadData to log the swapped function
     INTSTATUS status;
     DWORD retLength;
-    char buffer[DataSize];
+    char buffer[DataSize];  //Might cause warning due to variable length
 
     UNREFERENCED_PARAMETER(Context);
     UNREFERENCED_PARAMETER(Cr3);
@@ -4948,10 +5004,47 @@ IntWinLogWriteCall(
     if (!INT_SUCCESS(status))
         {
              //Failure after swapping in, end introspection
-             ERROR("[MOD] [ERROR] IntPhysMemReadAnySize failed buffer read: 0x%08x\n", status);
+             ERROR("[MOD] [NTWRITE] [ERROR] IntPhysMemReadAnySize failed buffer read: 0x%08x\n", status);
+             LOG("-------------------------------------------------------------------------------------------------------");
              return INT_STATUS_SUCCESS;
         }
         LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
+        LOG("-------------------------------------------------------------------------------------------------------");
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
+IntWinLogNtReadCall(
+    _In_ void* Context,
+    _In_ QWORD Cr3,
+    _In_ QWORD VirtualAddress,
+    _In_ QWORD PhysicalAddress,
+    _In_reads_bytes_(DataSize) void* Data,
+    _In_ DWORD DataSize,
+    _In_ DWORD Flags
+    )
+{
+    //Callback for IntSwapMemReadData to log the swapped function
+    INTSTATUS status;
+    DWORD retLength;
+    char buffer[DataSize];  //Might cause warning due to variable length
+
+    UNREFERENCED_PARAMETER(Context);
+    UNREFERENCED_PARAMETER(Cr3);
+    UNREFERENCED_PARAMETER(VirtualAddress);
+    UNREFERENCED_PARAMETER(Data);
+    UNREFERENCED_PARAMETER(Flags);
+
+    status = IntPhysicalMemReadAnySize(PhysicalAddress, DataSize, buffer, &retLength);
+    if (!INT_SUCCESS(status))
+        {
+             //Failure after swapping in, end introspection
+             ERROR("[MOD] [NTREAD] [ERROR] IntPhysMemReadAnySize failed buffer read: 0x%08x\n", status);
+             LOG("-------------------------------------------------------------------------------------------------------");
+             return INT_STATUS_SUCCESS;
+        }
+        LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
+        LOG("-------------------------------------------------------------------------------------------------------");
     return INT_STATUS_SUCCESS;
 }
 

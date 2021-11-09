@@ -4689,17 +4689,17 @@ IntWinNTReadFileCall(
     _In_ void *Detour
     )
 {
-    QWORD CR3;
+    /*QWORD CR3;
     INTSTATUS status;
     WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
     QWORD args[7];
     ULONG bufferLength;
-    DWORD retLength;
+    DWORD retLength;*/
 
     UNREFERENCED_PARAMETER(Detour);
 
-    LOG("[MOD] [NTREAD] called ---------------------------------------------------------------------------------");
+    LOG("[MOD] [NTREAD] called.");
     ////Attempt to obtain current CR3 value
     //status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
     //if (!INT_SUCCESS(status))
@@ -4872,7 +4872,7 @@ IntWinNTWriteFileCall(
 
              //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
              //Preinject and swaphandle not needed as logging can be done in callback
-             status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_NO_DUPS, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
+             status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
              return INT_STATUS_SUCCESS;
         }
         LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);

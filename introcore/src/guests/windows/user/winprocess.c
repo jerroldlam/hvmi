@@ -4858,8 +4858,7 @@ IntWinNTWriteFileCall(
         bufferLength = args[6] & 0x00000000ffffffff;
         LOG("Buffer Length : %lu bytes\n ", bufferLength);
 
-        //Might be causing warnings as vairable length arrays not allowed
-        char buffer[bufferLength];
+        char buffer[bufferLength]; //Might cause warning due to variable length
 
         //Read the virtual memory in the guest
         status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
@@ -4872,7 +4871,7 @@ IntWinNTWriteFileCall(
 
              //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
              //Preinject and swaphandle not needed as logging can be done in callback
-             status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
+             status = IntSwapMemReadData(CR3, args[5], bufferLength+1, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
              return INT_STATUS_SUCCESS;
         }
         LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);

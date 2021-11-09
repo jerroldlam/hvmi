@@ -4856,9 +4856,10 @@ IntWinNTWriteFileCall(
         //args[6] points to DET_ARG_STACK(7), which corresponds to buffer length in x64 calling convention for NTWriteFile
         //Masking as args[6] is QWORD(64 bit) but buffer length is ULONG(32 bit), hence it is done to take the lower 32 bits
         bufferLength = args[6] & 0x00000000ffffffff;
-        LOG("Buffer Length : %lu bytes\n ", bufferLength);
 
         char buffer[bufferLength]; //Might cause warning due to variable length
+
+        LOG("[MOD] [NTWRITE] [V] Buffer Length : %lu bytes\n ", bufferLength);
 
         //Read the virtual memory in the guest
         status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
@@ -4874,6 +4875,8 @@ IntWinNTWriteFileCall(
              status = IntSwapMemReadData(CR3, args[5], bufferLength+1, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
              return INT_STATUS_SUCCESS;
         }
+
+        //LOG("[MOD] [NTWRITE] Buffer Length : %lu bytes\n ", bufferLength);
         LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
         LOG("-------------------------------------------------------------------------------------------------------");
     }
@@ -5001,14 +5004,17 @@ IntWinLogNtWriteCall(
 
     status = IntPhysicalMemReadAnySize(PhysicalAddress, DataSize, buffer, &retLength);
     if (!INT_SUCCESS(status))
-        {
-             //Failure after swapping in, end introspection
-             ERROR("[MOD] [NTWRITE] [ERROR] IntPhysMemReadAnySize failed buffer read: 0x%08x\n", status);
-             LOG("-------------------------------------------------------------------------------------------------------");
-             return INT_STATUS_SUCCESS;
-        }
-        LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
+    {
+        //Failure after swapping in, end introspection
+        ERROR("[MOD] [NTWRITE] [ERROR] IntPhysMemReadAnySize failed buffer read: 0x%08x\n", status);
         LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[MOD] [NTWRITE] [P] Buffer Length : %lu bytes\n ", retLength);
+    LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
+    LOG("-------------------------------------------------------------------------------------------------------");
+
     return INT_STATUS_SUCCESS;
 }
 

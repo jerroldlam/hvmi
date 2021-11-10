@@ -5048,8 +5048,8 @@ IntWinLogNtReadCall(
          return INT_STATUS_SUCCESS;
     }
 
-    //LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
-    LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", &Data);
+    LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
+    LOG("[MOD] [NTREAD] [DATA] Buffer contents : %s\n", &Data);
     LOG("-------------------------------------------------------------------------------------------------------");
     return INT_STATUS_SUCCESS;
 }

@@ -4874,7 +4874,7 @@ IntWinNTWriteFileCall(
              return INT_STATUS_SUCCESS;
         }
 
-        LOG("[MOD] [NTWRITE] Buffer length : %lu bytes\n ", bufferLength);
+        LOG("[MOD] [NTWRITE] Buffer length : %u bytes\n ", bufferLength);
         LOG("[MOD] [NTWRITE] Buffer contents : %s\n", buffer);
         LOG("-------------------------------------------------------------------------------------------------------");
     }
@@ -5009,8 +5009,8 @@ IntWinLogNtWriteCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[MOD] [NTWRITE] Data size : %lu bytes\n ", DataSize);
-    LOG("[MOD] [NTWRITE] Buffer length : %lu bytes\n ", retLength);
+    LOG("[MOD] [NTWRITE] Data size : %u bytes\n ", DataSize);
+    LOG("[MOD] [NTWRITE] Buffer length : %u bytes\n ", retLength);
     LOG("[MOD] [NTWRITE] Buffer contents : %s\n", buffer);
     LOG("-------------------------------------------------------------------------------------------------------");
 
@@ -5036,19 +5036,21 @@ IntWinLogNtReadCall(
     UNREFERENCED_PARAMETER(Context);
     UNREFERENCED_PARAMETER(Cr3);
     UNREFERENCED_PARAMETER(VirtualAddress);
-    UNREFERENCED_PARAMETER(Data);
+    //UNREFERENCED_PARAMETER(Data);
     UNREFERENCED_PARAMETER(Flags);
 
     status = IntPhysicalMemReadAnySize(PhysicalAddress, DataSize, buffer, &retLength);
     if (!INT_SUCCESS(status))
-        {
-             //Failure after swapping in, end introspection
-             ERROR("[MOD] [NTREAD] [ERROR] IntPhysMemReadAnySize failed buffer read: 0x%08x\n", status);
-             LOG("-------------------------------------------------------------------------------------------------------");
-             return INT_STATUS_SUCCESS;
-        }
-        LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
-        LOG("-------------------------------------------------------------------------------------------------------");
+    {
+         //Failure after swapping in, end introspection
+         ERROR("[MOD] [NTREAD] [ERROR] IntPhysMemReadAnySize failed buffer read: 0x%08x\n", status);
+         LOG("-------------------------------------------------------------------------------------------------------");
+         return INT_STATUS_SUCCESS;
+    }
+
+    //LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
+    LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", &Data);
+    LOG("-------------------------------------------------------------------------------------------------------");
     return INT_STATUS_SUCCESS;
 }
 

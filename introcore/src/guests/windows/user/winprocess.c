@@ -4993,11 +4993,12 @@ IntWinLogNtWriteCall(
     INTSTATUS status;
     DWORD retLength;
     char buffer[DataSize];  //Might cause warning due to variable length
+    char* dataBuffer;
 
     UNREFERENCED_PARAMETER(Context);
     UNREFERENCED_PARAMETER(Cr3);
     UNREFERENCED_PARAMETER(VirtualAddress);
-    UNREFERENCED_PARAMETER(Data);
+    //UNREFERENCED_PARAMETER(Data);
     UNREFERENCED_PARAMETER(Flags);
 
     status = IntPhysicalMemReadAnySize(PhysicalAddress, DataSize, buffer, &retLength);
@@ -5009,9 +5010,11 @@ IntWinLogNtWriteCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[MOD] [NTWRITE] Data size : %u bytes\n ", DataSize);
+    dataBuffer = (char*)Data;
+
     LOG("[MOD] [NTWRITE] Buffer length : %u bytes\n ", retLength);
     LOG("[MOD] [NTWRITE] Buffer contents : %s\n", buffer);
+    LOG("[MOD] [NTREAD] [DATA] Buffer contents : %s\n", dataBuffer);
     LOG("-------------------------------------------------------------------------------------------------------");
 
     return INT_STATUS_SUCCESS;
@@ -5051,8 +5054,8 @@ IntWinLogNtReadCall(
 
     dataBuffer = (char*)Data;
 
-    //LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
-    LOG("[MOD] [NTREAD] [DATA] Buffer contents : %s\n", dataBuffer);
+    LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
+    //LOG("[MOD] [NTREAD] [DATA] Buffer contents : %s\n", dataBuffer);
     LOG("-------------------------------------------------------------------------------------------------------");
     return INT_STATUS_SUCCESS;
 }

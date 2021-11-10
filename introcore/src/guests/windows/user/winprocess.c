@@ -4859,8 +4859,6 @@ IntWinNTWriteFileCall(
 
         char buffer[bufferLength]; //Might cause warning due to variable length
 
-        LOG("[MOD] [NTWRITE] [V] Buffer Length : %lu bytes\n ", bufferLength);
-
         //Read the virtual memory in the guest
         status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
         if (!INT_SUCCESS(status))
@@ -4872,12 +4870,12 @@ IntWinNTWriteFileCall(
 
              //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
              //Preinject and swaphandle not needed as logging can be done in callback
-             status = IntSwapMemReadData(CR3, args[5], bufferLength+1, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
+             status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
              return INT_STATUS_SUCCESS;
         }
 
-        //LOG("[MOD] [NTWRITE] Buffer Length : %lu bytes\n ", bufferLength);
-        LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
+        LOG("[MOD] [NTWRITE] Buffer length : %lu bytes\n ", bufferLength);
+        LOG("[MOD] [NTWRITE] Buffer contents : %s\n", buffer);
         LOG("-------------------------------------------------------------------------------------------------------");
     }
 
@@ -5011,8 +5009,9 @@ IntWinLogNtWriteCall(
         return INT_STATUS_SUCCESS;
     }
 
-    LOG("[MOD] [NTWRITE] [P] Buffer Length : %lu bytes\n ", retLength);
-    LOG("[MOD] [NTWRITE] [BUFFER] Buffer contents : %s\n", buffer);
+    LOG("[MOD] [NTWRITE] Data size : %lu bytes\n ", DataSize);
+    LOG("[MOD] [NTWRITE] Buffer length : %lu bytes\n ", retLength);
+    LOG("[MOD] [NTWRITE] Buffer contents : %s\n", buffer);
     LOG("-------------------------------------------------------------------------------------------------------");
 
     return INT_STATUS_SUCCESS;

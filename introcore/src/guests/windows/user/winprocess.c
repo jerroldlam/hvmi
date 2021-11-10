@@ -5051,7 +5051,7 @@ IntWinLogNtReadCall(
 
     dataBuffer = (char*)Data;
 
-    LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
+    //LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
     LOG("[MOD] [NTREAD] [DATA] Buffer contents : %s\n", dataBuffer);
     LOG("-------------------------------------------------------------------------------------------------------");
     return INT_STATUS_SUCCESS;

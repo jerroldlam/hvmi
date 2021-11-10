@@ -4992,7 +4992,7 @@ IntWinLogNtWriteCall(
     //Callback for IntSwapMemReadData to log the swapped function
     INTSTATUS status;
     DWORD retLength;
-    char buffer[DataSize];  //Might cause warning due to variable length
+    //char buffer[DataSize];  //Might cause warning due to variable length
     char* dataBuffer;
 
     UNREFERENCED_PARAMETER(Context);
@@ -5001,19 +5001,19 @@ IntWinLogNtWriteCall(
     //UNREFERENCED_PARAMETER(Data);
     UNREFERENCED_PARAMETER(Flags);
 
-    status = IntPhysicalMemReadAnySize(PhysicalAddress, DataSize, buffer, &retLength);
-    if (!INT_SUCCESS(status))
-    {
-        //Failure after swapping in, end introspection
-        ERROR("[MOD] [NTWRITE] [ERROR] IntPhysMemReadAnySize failed buffer read: 0x%08x\n", status);
-        LOG("-------------------------------------------------------------------------------------------------------");
-        return INT_STATUS_SUCCESS;
-    }
+    //status = IntPhysicalMemReadAnySize(PhysicalAddress, DataSize, buffer, &retLength);
+    //if (!INT_SUCCESS(status))
+    //{
+    //    //Failure after swapping in, end introspection
+    //    ERROR("[MOD] [NTWRITE] [ERROR] IntPhysMemReadAnySize failed buffer read: 0x%08x\n", status);
+    //    LOG("-------------------------------------------------------------------------------------------------------");
+    //    return INT_STATUS_SUCCESS;
+    //}
 
     dataBuffer = (char*)Data;
 
-    LOG("[MOD] [NTWRITE] Buffer length : %u bytes\n ", retLength);
-    LOG("[MOD] [NTWRITE] Buffer contents : %s\n", buffer);
+    /*LOG("[MOD] [NTWRITE] Buffer length : %u bytes\n ", retLength);
+    LOG("[MOD] [NTWRITE] Buffer contents : %s\n", buffer);*/
     LOG("[MOD] [NTREAD] [DATA] Buffer contents : %s\n", dataBuffer);
     LOG("-------------------------------------------------------------------------------------------------------");
 
@@ -5035,7 +5035,7 @@ IntWinLogNtReadCall(
     INTSTATUS status;
     DWORD retLength;
     char buffer[DataSize];  //Might cause warning due to variable length
-    char* dataBuffer;
+    //char* dataBuffer;
 
     UNREFERENCED_PARAMETER(Context);
     UNREFERENCED_PARAMETER(Cr3);
@@ -5052,7 +5052,7 @@ IntWinLogNtReadCall(
          return INT_STATUS_SUCCESS;
     }
 
-    dataBuffer = (char*)Data;
+    //dataBuffer = (char*)Data;
 
     LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
     //LOG("[MOD] [NTREAD] [DATA] Buffer contents : %s\n", dataBuffer);

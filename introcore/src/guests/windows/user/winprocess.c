@@ -4994,6 +4994,7 @@ IntWinLogNtWriteCall(
     UNREFERENCED_PARAMETER(Context);
     UNREFERENCED_PARAMETER(Cr3);
     UNREFERENCED_PARAMETER(VirtualAddress);
+    UNREFERENCED_PARAMETER(PhysicalAddress);
     UNREFERENCED_PARAMETER(Flags);
 
     dataBuffer = (char*)Data;
@@ -5021,6 +5022,7 @@ IntWinLogNtReadCall(
     UNREFERENCED_PARAMETER(Context);
     UNREFERENCED_PARAMETER(Cr3);
     UNREFERENCED_PARAMETER(VirtualAddress);
+    UNREFERENCED_PARAMETER(PhysicalAddress);
     UNREFERENCED_PARAMETER(Flags);
 
     dataBuffer = (char*)Data;

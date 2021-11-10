@@ -5032,6 +5032,7 @@ IntWinLogNtReadCall(
     INTSTATUS status;
     DWORD retLength;
     char buffer[DataSize];  //Might cause warning due to variable length
+    char* dataBuffer;
 
     UNREFERENCED_PARAMETER(Context);
     UNREFERENCED_PARAMETER(Cr3);
@@ -5048,8 +5049,10 @@ IntWinLogNtReadCall(
          return INT_STATUS_SUCCESS;
     }
 
+    dataBuffer = (char*)Data;
+
     LOG("[MOD] [NTREAD] [BUFFER] Buffer contents : %s\n", buffer);
-    LOG("[MOD] [NTREAD] [DATA] Buffer contents : %s\n", Data);
+    LOG("[MOD] [NTREAD] [DATA] Buffer contents : %s\n", dataBuffer);
     LOG("-------------------------------------------------------------------------------------------------------");
     return INT_STATUS_SUCCESS;
 }

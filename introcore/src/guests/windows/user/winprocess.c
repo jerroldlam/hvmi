@@ -4777,7 +4777,7 @@ IntWinNTWriteFileCall(
     WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
     QWORD args[7];
-    char* buffer;
+    char* buffer = NULL;
     ULONG bufferLength;
     DWORD retLength;
 

@@ -582,38 +582,17 @@ IntWinProcPrepareInstrument(
     );
 
 INTSTATUS
-IntWinNTReadFileCall(
-    //_In_ WIN_PROCESS_OBJECT *Process
-    _In_ void *Detour
-    );
-
-INTSTATUS
 IntWinNTWriteFileCall(
-    //_In_ WIN_PROCESS_OBJECT *Process
-    _In_ void *Detour
-    );
-
-INTSTATUS
-IntWinZWReadFileCall(
-    //_In_ WIN_PROCESS_OBJECT *Process
-    _In_ void *Detour
-    );
-
-INTSTATUS
-IntWinZWWriteFileCall(
-    //_In_ WIN_PROCESS_OBJECT *Process
     _In_ void *Detour
     );
 
 INTSTATUS
 IntWinNTCreateFileCall(
-    //_In_ WIN_PROCESS_OBJECT *Process
     _In_ void *Detour
     );
 
 INTSTATUS
 IntWinNTReadFileInit(
-    //_In_ void *Detour
     void
     );
 
@@ -629,25 +608,12 @@ IntWinLogNtWriteCall(
     );
 
 INTSTATUS
-IntWinLogNtReadCall(
-    _In_ void* Context,
-    _In_ QWORD Cr3,
-    _In_ QWORD VirtualAddress,
-    _In_ QWORD PhysicalAddress,
-    _In_reads_bytes_(DataSize) void* Data,
-    _In_ DWORD DataSize,
-    _In_ DWORD Flags
-    );
-
-INTSTATUS
 IntWinNTCreateFileInit(
-    //_In_ void *Detour
     void
     );
 
 INTSTATUS
 IntWinNTWriteFileInit(
-    //_In_ void *Detour
     void
     );
 

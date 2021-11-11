@@ -4767,7 +4767,7 @@ IntWinNTWriteFileCall(
 /// Subsequently, the information is logged. Additionally, the buffer is read either directly if all levels
 /// of page-table entries are present and valid, or #PFs are injected to access swapped out memory pages.
 ///
-/// @param[in]  Detour     Not used.
+/// @param[in]  Detour     Used to obtain detour arguments
 ///
 /// @returns    #INT_STATUS_SUCCESS Always.
 ///
@@ -4777,11 +4777,8 @@ IntWinNTWriteFileCall(
     WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
     QWORD args[7];
-    //char* buffer = NULL;
     ULONG bufferLength;
     DWORD retLength;
-
-    UNREFERENCED_PARAMETER(Detour);
 
     LOG("[MOD] [NTWRITE] called ---------------------------------------------------------------------------------");
     //Attempt to obtain current CR3 value

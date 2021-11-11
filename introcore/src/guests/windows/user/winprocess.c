@@ -4777,6 +4777,7 @@ IntWinNTWriteFileCall(
     WIN_PROCESS_OBJECT *cProcess = NULL;
     WIN_PROCESS_OBJECT *pProcess = NULL;
     QWORD args[7];
+    char* buffer;
     ULONG bufferLength;
     DWORD retLength;
 
@@ -4841,7 +4842,7 @@ IntWinNTWriteFileCall(
         //Masking as args[6] is QWORD(64 bit) but buffer length is ULONG(32 bit), hence it is done to take the lower 32 bits
         bufferLength = args[6] & 0x00000000ffffffff;
 
-        char buffer[bufferLength]; //Might cause warning due to variable length
+        //char buffer[bufferLength]; //Might cause warning due to variable length
 
         //Read the virtual memory in the guest
         status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);

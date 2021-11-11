@@ -587,6 +587,11 @@ IntWinNTWriteFileCall(
     );
 
 INTSTATUS
+IntWinNTReadFileCall(
+    _In_ void *Detour
+    );
+
+INTSTATUS
 IntWinNTCreateFileCall(
     _In_ void *Detour
     );

@@ -587,6 +587,11 @@ IntWinNTWriteFileCall(
     );
 
 INTSTATUS
+IntWinZWWriteFileCall(
+    _In_ void *Detour
+    );
+
+INTSTATUS
 IntWinNTReadFileCall(
     _In_ void *Detour
     );
@@ -603,6 +608,17 @@ IntWinNTReadFileInit(
 
 INTSTATUS
 IntWinLogNtWriteCall(
+    _In_ void* Context,
+    _In_ QWORD Cr3,
+    _In_ QWORD VirtualAddress,
+    _In_ QWORD PhysicalAddress,
+    _In_reads_bytes_(DataSize) void* Data,
+    _In_ DWORD DataSize,
+    _In_ DWORD Flags
+    );
+
+INTSTATUS
+IntWinLogZwWriteCall(
     _In_ void* Context,
     _In_ QWORD Cr3,
     _In_ QWORD VirtualAddress,

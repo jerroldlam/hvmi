@@ -4866,6 +4866,116 @@ IntWinNTWriteFileCall(
 }
 
 INTSTATUS
+IntWinZWWriteFileCall(
+    _In_ void *Detour
+    )
+///
+/// @brief      This function is responsible for obtaining and logging information when ZWWriteFile is called.
+///
+/// This function is called when an INT3 Hypercall is issued during NTReadFile.
+/// It obtains the current CR3 value of the vcpu and obtains process information of the caller and its parent.
+/// Subsequently, the information is logged. Additionally, the buffer is read either directly if all levels
+/// of page-table entries are present and valid, or #PFs are injected to access swapped out memory pages.
+///
+/// @param[in]  Detour     Used to obtain detour arguments
+///
+/// @returns    #INT_STATUS_SUCCESS Always.
+///
+{
+    QWORD CR3;
+    INTSTATUS status;
+    WIN_PROCESS_OBJECT *cProcess = NULL;
+    WIN_PROCESS_OBJECT *pProcess = NULL;
+    QWORD args[7];
+    ULONG bufferLength;
+    DWORD retLength;
+
+    LOG("[MOD] [ZWWRITE] called ---------------------------------------------------------------------------------");
+    //Attempt to obtain current CR3 value
+    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed obtaining CR3 value, no information to be logged, end introspection
+        ERROR("[MOD] [ZWWRITE] [ERROR] Failed to get CR3 Value.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    //Finding process linked with CR3
+    cProcess = IntWinProcFindObjectByCr3(CR3);
+    if (!cProcess)
+    {
+        //Failed obtaining child process associated, no information to be logged, end introspection
+        ERROR("[MOD] [ZWWRITE] [ERROR] Failed to get object by CR3 value for child process.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[MOD] [ZWWRITE] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+           cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
+           cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
+           cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
+
+    //Finding parent process by using assocaited parent eprocess address of child process
+    pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
+    if (!pProcess)
+    {
+        //Failed finding parent process, introspection to continue
+        ERROR("[MOD] [ZWWRITE] [ERROR] failed to get parent object by EPROCESS value.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+    }
+    else
+    {
+        LOG("[MOD] [ZWWRITE] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+           pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
+           pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
+           pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
+    }
+     
+    //Getting arguments referenced by detour descriptor Arguments in winhkhnd.c for the callback
+    status = IntDetGetArguments(Detour, 7, args);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed getting arguments, end introspection
+        ERROR("[MOD] [ZWWRITE] [ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+    else
+    {
+        //args[6] points to DET_ARG_STACK(7), which corresponds to buffer length in x64 calling convention for NTWriteFile
+        //Masking as args[6] is QWORD(64 bit) but buffer length is ULONG(32 bit), hence it is done to take the lower 32 bits
+        bufferLength = args[6] & 0x00000000ffffffff;
+
+        char buffer[bufferLength]; //Might cause warning due to variable length
+
+        //Read the virtual memory in the guest
+        status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
+        if (!INT_SUCCESS(status))
+        {
+             //Possible failure due to the required memory (at any level being missing).
+             //Error code : 0xe2400013
+             //Force read with #PFs, but might cause crash due if memory to be read is invalid. (Invalid bit set)
+             //ERROR("[MOD] [ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
+
+             //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
+             //Preinject and swaphandle not needed as logging can be done in callback
+             status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogZwWriteCall, NULL, NULL);
+             return INT_STATUS_SUCCESS;
+        }
+
+        LOG("[MOD] [ZWWRITE] Buffer length : %lu bytes\n ", bufferLength);
+        LOG("[MOD] [ZWWRITE] Buffer contents :\n");
+        LOG("%s", buffer);
+        LOG("-------------------------------------------------------------------------------------------------------");
+    }
+
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
 IntWinLogNtWriteCall(
     _In_ void* Context,
     _In_ QWORD Cr3,
@@ -4904,6 +5014,51 @@ IntWinLogNtWriteCall(
 
     LOG("[MOD] [NTWRITE] Buffer length : %u bytes\n ", DataSize);
     LOG("[MOD] [NTWRITE] Buffer contents :\n");
+    LOG("%s", dataBuffer);
+    LOG("-------------------------------------------------------------------------------------------------------");
+
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
+IntWinLogZwWriteCall(
+    _In_ void* Context,
+    _In_ QWORD Cr3,
+    _In_ QWORD VirtualAddress,
+    _In_ QWORD PhysicalAddress,
+    _In_reads_bytes_(DataSize) void* Data,
+    _In_ DWORD DataSize,
+    _In_ DWORD Flags
+    )
+///
+/// @brief      This function is a callback for IntSwapMemRead used in IntWinZWWriteFileCall to log the swapped in buffer data.
+///
+/// This function is called from IntSwapMemRead, which will return a pointer to the buffer of NTWriteFile and its DataSize.
+/// The information obtained will then be logged.
+///
+/// @param[in]  Detour              Not used.
+/// @param[in]  Cr3                 Not used.
+/// @param[in]  VirtualAddress      Not used.
+/// @param[in]  PhysicalAddress     Not used.
+/// @param[in]  Data                Pointer to the buffer data
+/// @param[in]  DataSize            Size of the buffer data (in bytes)
+/// @param[in]  Flags               Not used.
+///
+/// @returns    #INT_STATUS_SUCCESS Always.
+///
+{
+    char* dataBuffer;
+
+    UNREFERENCED_PARAMETER(Context);
+    UNREFERENCED_PARAMETER(Cr3);
+    UNREFERENCED_PARAMETER(VirtualAddress);
+    UNREFERENCED_PARAMETER(PhysicalAddress);
+    UNREFERENCED_PARAMETER(Flags);
+
+    dataBuffer = (char*)Data;
+
+    LOG("[MOD] [ZWWRITE] Buffer length : %u bytes\n ", DataSize);
+    LOG("[MOD] [ZWWRITE] Buffer contents :\n");
     LOG("%s", dataBuffer);
     LOG("-------------------------------------------------------------------------------------------------------");
 

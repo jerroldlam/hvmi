@@ -5048,6 +5048,7 @@ IntWinLogZwWriteCall(
 ///
 {
     char* dataBuffer;
+    // int numLogSections;
 
     UNREFERENCED_PARAMETER(Context);
     UNREFERENCED_PARAMETER(Cr3);
@@ -5056,6 +5057,15 @@ IntWinLogZwWriteCall(
     UNREFERENCED_PARAMETER(Flags);
 
     dataBuffer = (char*)Data;
+    // numLogSections = DataSize % 1024;
+    // char bufferArray [numLogSections][1024];
+
+    // LOG("[MOD] [ZWWRITE] Buffer length : %u bytes\n ", DataSize);
+    // LOG("[MOD] [ZWWRITE] Buffer contents :\n");
+    // for (int i = 0; i < numLogSections;i++){
+    //     dataBuffer += (i * 1024);
+    //     bufferArray[i] = dataBuffer;
+    // }
 
     LOG("[MOD] [ZWWRITE] Buffer length : %u bytes\n ", DataSize);
     LOG("[MOD] [ZWWRITE] Buffer contents :\n");

@@ -2729,7 +2729,7 @@ INTSTATUS IntrocoreManager::IntIntroEventNotify( void *GuestHandle, DWORD EventC
 
 INTSTATUS IntrocoreManager::IntTracePrint( const CHAR *File, DWORD Line, const CHAR *Format, ... )
 {
-	char    buf[1024] = {};
+	char    buf[2048] = {};
 	va_list ap;
 
 	va_start( ap, Format );

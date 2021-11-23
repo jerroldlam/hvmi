@@ -1108,12 +1108,12 @@ IntWinGuestFinishInit(
         goto leave_and_unload;
     }
 
-    status = IntWinApiHookAll();
+    /*status = IntWinApiHookAll();
     if (!INT_SUCCESS(status))
     {
         ERROR("[ERROR] IntWinApiHookAll failed: 0x%08x\n", status);
         goto leave_and_unload;
-    }
+    }*/
 
     status = IntSwapgsStartMitigation();
     if (!INT_SUCCESS(status))
@@ -1133,6 +1133,13 @@ IntWinGuestFinishInit(
     if (NULL == gGuest.KernelDriver)
     {
         ERROR("[ERROR] Failed finding kernel module!\n");
+        goto leave_and_unload;
+    }
+
+    status = IntWinApiHookAll();
+    if (!INT_SUCCESS(status))
+    {
+        ERROR("[ERROR] IntWinApiHookAll failed: 0x%08x\n", status);
         goto leave_and_unload;
     }
 

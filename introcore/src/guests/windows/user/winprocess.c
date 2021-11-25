@@ -4847,8 +4847,7 @@ IntWinNTWriteFileCall(
         {
              //Possible failure due to the required memory (at any level being missing).
              //Error code : 0xe2400013
-             //Force read with #PFs, but might cause crash due if memory to be read is invalid. (Invalid bit set)
-             //ERROR("[MOD] [ERROR] IntKernVirtMemRead failed buffer read: 0x%08x\n", status);
+             //Force read with #PFs, but might cause crash due if memory to be read is invalid.
 
              //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
              //Preinject and swaphandle not needed as logging can be done in callback
@@ -4928,12 +4927,56 @@ IntWinNTWriteFileInit(
     return INT_STATUS_SUCCESS;
 }
 
+//typedef struct _NET_BUFFER_LIST {
+//  union {
+//    struct {
+//      NET_BUFFER_LIST *Next;
+//      NET_BUFFER      *FirstNetBuffer;
+//    };
+//    SLIST_HEADER           Link;
+//    NET_BUFFER_LIST_HEADER NetBufferListHeader;
+//  };
+//  NET_BUFFER_LIST_CONTEXT *Context;
+//  NET_BUFFER_LIST         *ParentNetBufferList;
+//  NDIS_HANDLE             NdisPoolHandle;
+//  PVOID                   NdisReserved[2];
+//  PVOID                   ProtocolReserved[4];
+//  PVOID                   MiniportReserved[2];
+//  PVOID                   Scratch;
+//  NDIS_HANDLE             SourceHandle;
+//  ULONG                   NblFlags;
+//  LONG                    ChildRefCount;
+//  ULONG                   Flags;
+//  union {
+//    NDIS_STATUS Status;
+//    ULONG       NdisReserved2;
+//  };
+//  PVOID                   NetBufferListInfo[MaxNetBufferListInfo];
+//} NET_BUFFER_LIST, *PNET_BUFFER_LIST;
+
 INTSTATUS
 IntWinSendCall(
-    void
+    _In_ void *Detour
     )
 {
-    LOG("[MOD] ndis Send called");
+    INTSTATUS status;
+    QWORD args[4];
+
+    LOG("[MOD] [NDIS SEND] called ---------------------------------------------------------------------------------");
+
+    // Geting Detour Arguments associated with NdisSendNetBufferLists
+    // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/ndis/nf-ndis-ndissendnetbufferlists
+    status = IntDetGetArguments(Detour, 4, args);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed getting arguments, end introspection
+        ERROR("[MOD] [NDIS SEND] [ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    // args [2] is PNET_BUFFER_LIST but how to access its data structure
+
     return INT_STATUS_SUCCESS;
 }
 
@@ -4942,6 +4985,30 @@ IntWinReceiveCall(
     void
     )
 {
-    LOG("[MOD] ndis Receive called");
+    LOG("[MOD] Ndis Receive called");
     return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
+IntWinNdisFillMemoryCall(
+    _In_ void* Detour
+)
+{
+    INTSTATUS status;
+    QWORD args[3];
+
+    LOG("[MOD] [NDIS SEND] called ---------------------------------------------------------------------------------");
+
+    // Geting Detour Arguments associated with NdisFillMemory
+    status = IntDetGetArguments(Detour, 4, args);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed getting arguments, end introspection
+        ERROR("[MOD] [NDIS SEND] [ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[MOD] [NDIS FILL] Fill value: ")
+    LOG("%0xllx", args[2]);
 }

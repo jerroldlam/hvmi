@@ -620,12 +620,17 @@ IntWinNTWriteFileInit(
 
 INTSTATUS
 IntWinSendCall(
-    void
+    _In_ void *Detour
     );
 
 INTSTATUS
 IntWinReceiveCall(
     void
+    );
+
+INTSTATUS
+IntWinNdisFillMemoryCall(
+    _In_ void *Detour
     );
 
 #endif // _WINPROCESS_H_

@@ -5008,7 +5008,7 @@ IntWinNdisFillMemoryCall(
         LOG("-------------------------------------------------------------------------------------------------------");
         return INT_STATUS_SUCCESS;
     }
-
-    LOG("[MOD] [NDIS FILL] Fill value: ");
-    LOG("%0xllx", args[2]);
+    return INT_STATUS_SUCCESS;
+    //LOG("[MOD] [NDIS FILL] Fill value: ");
+    //LOG("%0xllx", args[2]);
 }

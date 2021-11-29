@@ -86,6 +86,11 @@ IntCallbacksUnInit(
     void
     );
 
+INTSTATUS
+IntLogContext(
+    void
+);
+
 
 static inline INTSTATUS
 IntEnableEptNotifications(

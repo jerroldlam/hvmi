@@ -2823,6 +2823,8 @@ IntHandleBreakpoint(
 
     STATS_ENTER(statsInt3);
 
+    IntLogContext();
+
     // Handle guest detours.
     if (!found)
     {
@@ -3592,6 +3594,44 @@ IntCallbacksUnInit(
     IntUnregisterEventInjectionHandler();
 
     IntUnregisterEnginesResultCalback();
+
+    return INT_STATUS_SUCCESS;
+}
+
+INTSTATUS
+IntLogContext(
+    void
+)
+{
+    QWORD CR3;
+    INTSTATUS status;
+    WIN_PROCESS_OBJECT *cProcess = NULL;
+
+    // LOGGING CONTEXT -----------------------------------------------
+    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed obtaining CR3 value, no information to be logged, end introspection
+        ERROR("[MOD] [BP] [ERROR] Failed to get CR3 Value.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    //Finding process linked with CR3
+    cProcess = IntWinProcFindObjectByCr3(CR3);
+    if (!cProcess)
+    {
+        //Failed obtaining child process associated, no information to be logged, end introspection
+        ERROR("[MOD] [BP] [ERROR] Failed to get object by CR3 value for child process.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[MOD] [BP] [PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+           cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
+           cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
+           cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
 
     return INT_STATUS_SUCCESS;
 }

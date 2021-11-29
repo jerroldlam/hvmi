@@ -2316,6 +2316,7 @@ IntWinAgentHandleInt3(
     // No point in handling ring 3 breakpoints. We never establish breakpoints in user-mode, so this must be reinjected.
     if (0 != ring)
     {
+        LOG("RING 3");
         return INT_STATUS_NOT_FOUND;
     }
 

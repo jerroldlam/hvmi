@@ -4842,6 +4842,7 @@ IntWinNTWriteFileCall(
         char buffer[bufferLength]; //Might cause warning due to variable length
 
         //Read the virtual memory in the guest
+        LOG("Address: 0x%016llx", args[5]);
         status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
         if (!INT_SUCCESS(status))
         {

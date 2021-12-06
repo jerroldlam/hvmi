@@ -4851,6 +4851,7 @@ IntWinNTWriteFileCall(
 
              //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
              //Preinject and swaphandle not needed as logging can be done in callback
+             LOG("Address: 0x%016llx", args[5]);
              status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
              return INT_STATUS_SUCCESS;
         }

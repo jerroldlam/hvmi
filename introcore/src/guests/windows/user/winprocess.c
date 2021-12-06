@@ -4842,25 +4842,30 @@ IntWinNTWriteFileCall(
         char buffer[bufferLength]; //Might cause warning due to variable length
 
         //Read the virtual memory in the guest
+
         LOG("Address: 0x%016llx", args[5]);
-        status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
-        if (!INT_SUCCESS(status))
-        {
-             //Possible failure due to the required memory (at any level being missing).
-             //Error code : 0xe2400013
-             //Force read with #PFs, but might cause crash due if memory to be read is invalid.
+        IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
+        //return INT_STATUS_SUCCESS;
 
-             //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
-             //Preinject and swaphandle not needed as logging can be done in callback
-             LOG("Address: 0x%016llx", args[5]);
-             status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
-             return INT_STATUS_SUCCESS;
-        }
+        // LOG("Address: 0x%016llx", args[5]);
+        // status = IntKernVirtMemRead(args[5], bufferLength, buffer, &retLength);
+        // if (!INT_SUCCESS(status))
+        // {
+        //      //Possible failure due to the required memory (at any level being missing).
+        //      //Error code : 0xe2400013
+        //      //Force read with #PFs, but might cause crash due if memory to be read is invalid.
 
-        LOG("[MOD] [NTWRITE] Buffer length : %lu bytes\n ", bufferLength);
-        LOG("[MOD] [NTWRITE] Buffer contents :\n");
-        LOG("%s", buffer);
-        LOG("-------------------------------------------------------------------------------------------------------");
+        //      //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
+        //      //Preinject and swaphandle not needed as logging can be done in callback
+        //      LOG("Address: 0x%016llx", args[5]);
+        //      status = IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
+        //      return INT_STATUS_SUCCESS;
+        // }
+
+        // LOG("[MOD] [NTWRITE] Buffer length : %lu bytes\n ", bufferLength);
+        // LOG("[MOD] [NTWRITE] Buffer contents :\n");
+        // LOG("%s", buffer);
+        // LOG("-------------------------------------------------------------------------------------------------------");
     }
 
     return INT_STATUS_SUCCESS;

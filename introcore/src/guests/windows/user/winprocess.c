@@ -4843,7 +4843,7 @@ IntWinNTWriteFileCall(
 
         //Read the virtual memory in the guest
 
-        LOG("Address: 0x%016llx", args[5]);
+        //LOG("Address: 0x%016llx", args[5]);
         IntSwapMemReadData(CR3, args[5], bufferLength, SWAPMEM_OPT_UM_FAULT, cProcess, 0 , IntWinLogNtWriteCall, NULL, NULL);
         //return INT_STATUS_SUCCESS;
 

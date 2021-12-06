@@ -2823,7 +2823,7 @@ IntHandleBreakpoint(
 
     STATS_ENTER(statsInt3);
 
-    IntLogContext();
+    //IntLogContext();
 
     // Handle guest detours.
     if (!found)

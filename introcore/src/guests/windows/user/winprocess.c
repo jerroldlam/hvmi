@@ -4778,7 +4778,6 @@ IntWinNTWriteFileCall(
     WIN_PROCESS_OBJECT *pProcess = NULL;
     QWORD args[7];
     ULONG bufferLength;
-    DWORD retLength;
 
     LOG("[MOD] [NTWRITE] called ---------------------------------------------------------------------------------");
     //Attempt to obtain current CR3 value
@@ -4838,8 +4837,6 @@ IntWinNTWriteFileCall(
         //args[6] points to DET_ARG_STACK(7), which corresponds to buffer length in x64 calling convention for NTWriteFile
         //Masking as args[6] is QWORD(64 bit) but buffer length is ULONG(32 bit), hence it is done to take the lower 32 bits
         bufferLength = args[6] & 0x00000000ffffffff;
-
-        char buffer[bufferLength]; //Might cause warning due to variable length
 
         //Read the virtual memory in the guest
 

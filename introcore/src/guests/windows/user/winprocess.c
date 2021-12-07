@@ -20,6 +20,8 @@
 #include "wintoken.h"
 #include "winpe.h"
 #include "winsecdesc.h"
+#include "ntddk.h"
+#include "ndis.h"
 
 /// @brief The maximum length (in bytes) of the data read from the guest when reading the command line of a process
 /// that is not protected with the #PROC_OPT_PROT_SCAN_CMD_LINE.
@@ -4692,66 +4694,16 @@ IntWinNTReadFileCall(
 /// @brief      This function is responsible for obtaining and logging information when NTReadFile is called.
 ///
 /// This function is called when an INT3 Hypercall is issued during NTReadFile.
-/// It obtains the current CR3 value of the vcpu and obtains process information of the caller and its parent.
-/// Subsequently, the information is logged.
+/// Logs when NTReadFile is called.
 ///
 /// @param[in]  Detour     Not used.
 ///
 /// @returns    #INT_STATUS_SUCCESS Always.
 ///
 {
-    /*QWORD CR3;
-    INTSTATUS status;
-    WIN_PROCESS_OBJECT *cProcess = NULL;
-    WIN_PROCESS_OBJECT *pProcess = NULL;*/
-
     UNREFERENCED_PARAMETER(Detour);
 
     LOG("[MOD] [NTRead] called ---------------------------------------------------------------------------------");
-
-    //Attempt to obtain current CR3 value
-    //status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
-    //if (!INT_SUCCESS(status))
-    //{
-    //    //Failed obtaining CR3 value, no information to be logged, end introspection
-    //    ERROR("[MOD] [NTREAD] [ERROR] Failed to get CR3 Value.");
-    //    LOG("-------------------------------------------------------------------------------------------------------");
-    //    return INT_STATUS_SUCCESS;
-    //}
-
-    ////Finding process linked with CR3
-    //cProcess = IntWinProcFindObjectByCr3(CR3);
-    //if (!cProcess)
-    //{
-    //    //Failed obtaining child process associated, no information to be logged, end introspection
-    //    ERROR("[MOD] [NTREAD] [ERROR] Failed to get object by CR3 value for child process.");
-    //    LOG("-------------------------------------------------------------------------------------------------------");
-    //    return INT_STATUS_SUCCESS;
-    //}
-
-    //LOG("[MOD] [NTREAD] [CHILD PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-    //       cProcess->Name, cProcess->NameHash, cProcess->Path ? utf16_for_log(cProcess->Path->Path) : "<invalid>",
-    //       cProcess->Pid, cProcess->EprocessAddress, cProcess->Cr3, cProcess->UserCr3, cProcess->ParentEprocess, cProcess->RealParentEprocess,
-    //       cProcess->SystemProcess ? "SYSTEM" : "not system", cProcess->IsAgent ? "AGENT" : "not agent");
-
-    ////Finding parent process by using assocaited parent eprocess address of child process
-    //pProcess = IntWinProcFindObjectByEprocess(cProcess->ParentEprocess);
-    //if (!pProcess)
-    //{
-    //    //Failed finding parent process, introspection to continue
-    //    ERROR("[MOD] [NTREAD] [ERROR] failed to get parent object by EPROCESS value.");
-    //}
-    //else
-    //{
-    //    LOG("[MOD] [NTREAD] [PARENT PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-    //       pProcess->Name, pProcess->NameHash, pProcess->Path ? utf16_for_log(pProcess->Path->Path) : "<invalid>",
-    //       pProcess->Pid, pProcess->EprocessAddress, pProcess->Cr3, pProcess->UserCr3, pProcess->ParentEprocess, pProcess->RealParentEprocess,
-    //       pProcess->SystemProcess ? "SYSTEM" : "not system", pProcess->IsAgent ? "AGENT" : "not agent");
-    //}
-
-    //LOG("-------------------------------------------------------------------------------------------------------");
     return INT_STATUS_SUCCESS;
 }
 

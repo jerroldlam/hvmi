@@ -4863,33 +4863,6 @@ IntWinNTWriteFileInit(
     return INT_STATUS_SUCCESS;
 }
 
-//typedef struct _NET_BUFFER_LIST {
-//  union {
-//    struct {
-//      NET_BUFFER_LIST *Next;
-//      NET_BUFFER      *FirstNetBuffer;
-//    };
-//    SLIST_HEADER           Link;
-//    NET_BUFFER_LIST_HEADER NetBufferListHeader;
-//  };
-//  NET_BUFFER_LIST_CONTEXT *Context;
-//  NET_BUFFER_LIST         *ParentNetBufferList;
-//  NDIS_HANDLE             NdisPoolHandle;
-//  PVOID                   NdisReserved[2];
-//  PVOID                   ProtocolReserved[4];
-//  PVOID                   MiniportReserved[2];
-//  PVOID                   Scratch;
-//  NDIS_HANDLE             SourceHandle;
-//  ULONG                   NblFlags;
-//  LONG                    ChildRefCount;
-//  ULONG                   Flags;
-//  union {
-//    NDIS_STATUS Status;
-//    ULONG       NdisReserved2;
-//  };
-//  PVOID                   NetBufferListInfo[MaxNetBufferListInfo];
-//} NET_BUFFER_LIST, *PNET_BUFFER_LIST;
-
 INTSTATUS
 IntWinSendCall(
     _In_ void *Detour
@@ -4912,6 +4885,14 @@ IntWinSendCall(
     }
 
     // args [2] is PNET_BUFFER_LIST but how to access its data structure
+    PNET_BUFFER_LIST nbl = args[2];
+    NET_BUFFER *firstNetBuffer = &nbl.FirstNetBuffer;
+    MDL *mdlChain = &firstNetBuffer.MdlChain;
+    QWORD systemVa = &mdlChain.MappedSystemVa;
+
+    LOG("System VA: 0x%llx", systemVa);
+
+
 
     return INT_STATUS_SUCCESS;
 }

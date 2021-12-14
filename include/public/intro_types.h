@@ -49,6 +49,11 @@ typedef uint16_t                WORD, *PWORD;
 typedef uint32_t                DWORD, *PDWORD;
 
 typedef unsigned long           ULONG, *PULONG;
+typedef unsigned short          USHORT, *PUSHORT;
+typedef short                   CSHORT, *PCSHORT;
+typedef long long               LONGLONG, *PLONGLONG;
+typedef long                    LONG, *PLONG;
+typedef void                    VOID, *PVOID;
 
 // If we don't define 64-bit types to `long long`, we have a problem with string formatting, since
 // `%lx` should be used on gnu, and `%llx` on MSVC

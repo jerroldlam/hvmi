@@ -17,14 +17,19 @@ typedef uint8_t SLIST_HEADER [16]; //16 bytes for 64 bit systems
 
 #define MEMORY_ALLOCATION_ALIGNMENT 16
 
+typedef struct _MDL {
+  struct _MDL      *Next;
+  CSHORT           Size;
+  CSHORT           MdlFlags;
+  struct _EPROCESS *Process;
+  PVOID            MappedSystemVa;
+  PVOID            StartVa;
+  ULONG            ByteCount;
+  ULONG            ByteOffset;
+} MDL, *PMDL;
+
 //--------Questionable -----------------
 // Physical Address, net buffer data length, scatter gather list & element
-
-typedef struct _SCATTER_GATHER_ELEMENT {
-  PHYSICAL_ADDRESS  Address;
-  ULONG  Length;
-  PULONG  Reserved; //changed to PULONG from ULONG_PTR
-} SCATTER_GATHER_ELEMENT, *PSCATTER_GATHER_ELEMENT;
 
 typedef union {
    struct {
@@ -33,6 +38,12 @@ typedef union {
    } u;
    LONGLONG QuadPart;
 } PHYSICAL_ADDRESS;
+
+typedef struct _SCATTER_GATHER_ELEMENT {
+  PHYSICAL_ADDRESS  Address;
+  ULONG  Length;
+  PULONG  Reserved; //changed to PULONG from ULONG_PTR
+} SCATTER_GATHER_ELEMENT, *PSCATTER_GATHER_ELEMENT;
 
 typedef void NET_BUFFER_DATA_LENGTH(
    PVOID _NB  //?? whats this
@@ -164,16 +175,3 @@ typedef struct _NET_BUFFER {
     SCATTER_GATHER_LIST      *ScatterGatherList;
   };
 } NET_BUFFER, *PNET_BUFFER;
-
-typedef struct _MDL {
-  struct _MDL      *Next;
-  CSHORT           Size;
-  CSHORT           MdlFlags;
-  struct _EPROCESS *Process;
-  PVOID            MappedSystemVa;
-  PVOID            StartVa;
-  ULONG            ByteCount;
-  ULONG            ByteOffset;
-} MDL, *PMDL;
-
-

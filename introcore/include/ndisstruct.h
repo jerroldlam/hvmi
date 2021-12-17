@@ -18,7 +18,13 @@ typedef uint8_t SLIST_HEADER [16]; //16 bytes for 64 bit systems
 #define MEMORY_ALLOCATION_ALIGNMENT 16
 
 //--------Questionable -----------------
-// Physical Address, net buffer data length, scatter gather list & element 
+// Physical Address, net buffer data length, scatter gather list & element
+
+typedef struct _SCATTER_GATHER_ELEMENT {
+  PHYSICAL_ADDRESS  Address;
+  ULONG  Length;
+  PULONG  Reserved; //changed to PULONG from ULONG_PTR
+} SCATTER_GATHER_ELEMENT, *PSCATTER_GATHER_ELEMENT;
 
 typedef union {
    struct {
@@ -38,11 +44,7 @@ typedef struct _SCATTER_GATHER_LIST {
   SCATTER_GATHER_ELEMENT Elements[];
 } SCATTER_GATHER_LIST, *PSCATTER_GATHER_LIST;
 
-typedef struct _SCATTER_GATHER_ELEMENT {
-  PHYSICAL_ADDRESS  Address;
-  ULONG  Length;
-  PULONG  Reserved; //changed to PULONG from ULONG_PTR
-} SCATTER_GATHER_ELEMENT, *PSCATTER_GATHER_ELEMENT;
+
 
 //-------------------------------------
 
@@ -57,7 +59,8 @@ typedef struct _NET_BUFFER_LIST_CONTEXT
     PNET_BUFFER_LIST_CONTEXT    Next;
     USHORT                      Size;
     USHORT                      Offset;
-    DECLSPEC_ALIGN(MEMORY_ALLOCATION_ALIGNMENT)     UCHAR      ContextData[];
+    //DECLSPEC_ALIGN(MEMORY_ALLOCATION_ALIGNMENT)     UCHAR      ContextData[];
+    UCHAR ContextData[];
 } NET_BUFFER_LIST_CONTEXT, *PNET_BUFFER_LIST_CONTEXT;
 
 typedef union _NET_BUFFER_LIST_HEADER {
@@ -89,9 +92,13 @@ typedef struct _NET_BUFFER_LIST
     PNET_BUFFER_LIST_CONTEXT    Context;
     PNET_BUFFER_LIST            ParentNetBufferList;
     NDIS_HANDLE                 NdisPoolHandle;
-    DECLSPEC_ALIGN(MEMORY_ALLOCATION_ALIGNMENT)PVOID NdisReserved[2];
-    DECLSPEC_ALIGN(MEMORY_ALLOCATION_ALIGNMENT)PVOID ProtocolReserved[4];
-    DECLSPEC_ALIGN(MEMORY_ALLOCATION_ALIGNMENT)PVOID MiniportReserved[2];
+    //DECLSPEC_ALIGN(MEMORY_ALLOCATION_ALIGNMENT)PVOID NdisReserved[2];
+    //DECLSPEC_ALIGN(MEMORY_ALLOCATION_ALIGNMENT)PVOID ProtocolReserved[4];
+    //DECLSPEC_ALIGN(MEMORY_ALLOCATION_ALIGNMENT)PVOID MiniportReserved[2];
+    PVOID NdisReserved[2];
+    PVOID ProtocolReserved[4];
+    PVOID MiniportReserved[2];
+
     PVOID                       Scratch;
     NDIS_HANDLE                 SourceHandle;
     ULONG                       NblFlags;   // public flags
@@ -106,6 +113,28 @@ typedef struct _NET_BUFFER_LIST
 
     PVOID                       NetBufferListInfo[MaxNetBufferListInfo];
 } NET_BUFFER_LIST, *PNET_BUFFER_LIST;
+
+typedef union _NET_BUFFER_HEADER {
+  NET_BUFFER_DATA NetBufferData;
+  SLIST_HEADER    Link;
+} NET_BUFFER_HEADER, *PNET_BUFFER_HEADER;
+
+typedef struct _NET_BUFFER_DATA {
+  NET_BUFFER             *Next;
+  MDL                    *CurrentMdl;
+  ULONG                  CurrentMdlOffset;
+  NET_BUFFER_DATA_LENGTH NbDataLength;
+  MDL                    *MdlChain;
+  ULONG                  DataOffset;
+} NET_BUFFER_DATA, *PNET_BUFFER_DATA;
+
+typedef struct _NET_BUFFER_SHARED_MEMORY {
+  NET_BUFFER_SHARED_MEMORY *NextSharedMemorySegment;
+  ULONG                    SharedMemoryFlags;
+  NDIS_HANDLE              SharedMemoryHandle;
+  ULONG                    SharedMemoryOffset;
+  ULONG                    SharedMemoryLength;
+} NET_BUFFER_SHARED_MEMORY, *PNET_BUFFER_SHARED_MEMORY;
 
 typedef struct _NET_BUFFER {
   union {
@@ -147,24 +176,4 @@ typedef struct _MDL {
   ULONG            ByteOffset;
 } MDL, *PMDL;
 
-typedef union _NET_BUFFER_HEADER {
-  NET_BUFFER_DATA NetBufferData;
-  SLIST_HEADER    Link;
-} NET_BUFFER_HEADER, *PNET_BUFFER_HEADER;
 
-typedef struct _NET_BUFFER_DATA {
-  NET_BUFFER             *Next;
-  MDL                    *CurrentMdl;
-  ULONG                  CurrentMdlOffset;
-  NET_BUFFER_DATA_LENGTH NbDataLength;
-  MDL                    *MdlChain;
-  ULONG                  DataOffset;
-} NET_BUFFER_DATA, *PNET_BUFFER_DATA;
-
-typedef struct _NET_BUFFER_SHARED_MEMORY {
-  NET_BUFFER_SHARED_MEMORY *NextSharedMemorySegment;
-  ULONG                    SharedMemoryFlags;
-  NDIS_HANDLE              SharedMemoryHandle;
-  ULONG                    SharedMemoryOffset;
-  ULONG                    SharedMemoryLength;
-} NET_BUFFER_SHARED_MEMORY, *PNET_BUFFER_SHARED_MEMORY;

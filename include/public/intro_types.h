@@ -48,6 +48,7 @@ typedef uint8_t                 BYTE, *PBYTE;
 typedef uint16_t                WORD, *PWORD;
 typedef uint32_t                DWORD, *PDWORD;
 
+typedef unsigned char           UCHAR, *PUCHAR;
 typedef unsigned long           ULONG, *PULONG;
 typedef unsigned short          USHORT, *PUSHORT;
 typedef short                   CSHORT, *PCSHORT;

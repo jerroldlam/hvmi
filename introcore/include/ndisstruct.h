@@ -18,6 +18,8 @@ typedef uint8_t SLIST_HEADER [16]; //16 bytes for 64 bit systems
 #define MEMORY_ALLOCATION_ALIGNMENT 16
 
 //--------Questionable -----------------
+// Physical Address, net buffer data length, scatter gather list & element 
+
 typedef union {
    struct {
        ULONG LowPart;
@@ -27,8 +29,20 @@ typedef union {
 } PHYSICAL_ADDRESS;
 
 typedef void NET_BUFFER_DATA_LENGTH(
-   _NB
+   PVOID _NB  //?? whats this
 );
+
+typedef struct _SCATTER_GATHER_LIST {
+  ULONG                  NumberOfElements;
+  PULONG              Reserved;  //changed to PULONG from ULONG_PTR
+  SCATTER_GATHER_ELEMENT Elements[];
+} SCATTER_GATHER_LIST, *PSCATTER_GATHER_LIST;
+
+typedef struct _SCATTER_GATHER_ELEMENT {
+  PHYSICAL_ADDRESS  Address;
+  ULONG  Length;
+  PULONG  Reserved; //changed to PULONG from ULONG_PTR
+} SCATTER_GATHER_ELEMENT, *PSCATTER_GATHER_ELEMENT;
 
 //-------------------------------------
 

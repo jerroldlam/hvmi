@@ -20,8 +20,7 @@
 #include "wintoken.h"
 #include "winpe.h"
 #include "winsecdesc.h"
-//#include "ntddk.h"
-//#include "ndis.h"
+#include "ndisstruct.h"
 
 /// @brief The maximum length (in bytes) of the data read from the guest when reading the command line of a process
 /// that is not protected with the #PROC_OPT_PROT_SCAN_CMD_LINE.

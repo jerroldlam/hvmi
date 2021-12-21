@@ -1,8 +1,9 @@
 #ifndef _NDISSTRUCT_H_
 #define _NDISSTRUCT_H_
 
-#include "introtypes.h"
 #include "intro_types.h"
+#include "introtypes.h"
+
 
 //----------NOT ACTUAL STRUCTURES----------------------
 // Used as placeholders

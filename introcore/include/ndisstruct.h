@@ -88,20 +88,20 @@ typedef union _SLIST_HEADER
   {
     struct
     {
-      /* 0x0000 */ unsigned __int64 Alignment;
-      /* 0x0008 */ unsigned __int64 Region;
+      /* 0x0000 */ unsigned long long Alignment; //originally __int64
+      /* 0x0008 */ unsigned long long Region; //originally __int64
     }; /* size: 0x0010 */
     struct
     {
       struct /* bitfield */
       {
-        /* 0x0000 */ unsigned __int64 Depth : 16; /* bit position: 0 */
-        /* 0x0000 */ unsigned __int64 Sequence : 48; /* bit position: 16 */
+        /* 0x0000 */ unsigned long long Depth : 16; /* bit position: 0 */ //originally __int64
+        /* 0x0000 */ unsigned long long Sequence : 48; /* bit position: 16 */ //originally __int64
       }; /* bitfield */
       struct /* bitfield */
       {
-        /* 0x0008 */ unsigned __int64 Reserved : 4; /* bit position: 0 */
-        /* 0x0008 */ unsigned __int64 NextEntry : 60; /* bit position: 4 */
+        /* 0x0008 */ unsigned long long Reserved : 4; /* bit position: 0 */ //originally __int64
+        /* 0x0008 */ unsigned long long NextEntry : 60; /* bit position: 4 */ //originally __int64
       }; /* bitfield */
     } /* size: 0x0010 */ HeaderX64;
   }; /* size: 0x0010 */

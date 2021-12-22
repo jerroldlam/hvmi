@@ -82,30 +82,6 @@ typedef struct _NET_BUFFER_LIST
 //-------------------------------------------END OF NET BUFFER LIST----------------------------------------------------------------
 
 //--------------------------------------------------NET BUFFER---------------------------------------------------------------------
-typedef union _SLIST_HEADER
-{
-  union
-  {
-    struct
-    {
-      /* 0x0000 */ unsigned long long Alignment; //originally __int64
-      /* 0x0008 */ unsigned long long Region; //originally __int64
-    }; /* size: 0x0010 */
-    struct
-    {
-      struct /* bitfield */
-      {
-        /* 0x0000 */ unsigned long long Depth : 16; /* bit position: 0 */ //originally __int64
-        /* 0x0000 */ unsigned long long Sequence : 48; /* bit position: 16 */ //originally __int64
-      }; /* bitfield */
-      struct /* bitfield */
-      {
-        /* 0x0008 */ unsigned long long Reserved : 4; /* bit position: 0 */ //originally __int64
-        /* 0x0008 */ unsigned long long NextEntry : 60; /* bit position: 4 */ //originally __int64
-      }; /* bitfield */
-    } /* size: 0x0010 */ HeaderX64;
-  }; /* size: 0x0010 */
-} SLIST_HEADER, *PSLIST_HEADER; /* size: 0x0010 */
 
 typedef union _NET_BUFFER_DATA_LENGTH
 {
@@ -150,7 +126,7 @@ typedef union _LARGE_INTEGER
       /* 0x0000 */ unsigned long LowPart;
       /* 0x0004 */ long HighPart;
     } /* size: 0x0008 */ u;
-    /* 0x0000 */ __int64 QuadPart;
+    /* 0x0000 */ long long QuadPart; //originally __int64
   }; /* size: 0x0008 */
 } LARGE_INTEGER, *PLARGE_INTEGER; /* size: 0x0008 */
 

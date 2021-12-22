@@ -4887,6 +4887,9 @@ IntWinSendCall(
     LOG("PNET_BUFFER_LIST: 0x%llx", args[2]);
 
     /*PNET_BUFFER_LIST nbl = args[2];
+    NET_BUFFER *firstNetBuffer = &nbl.FirstNetBuffer;*/
+
+    /*PNET_BUFFER_LIST nbl = args[2];
     NET_BUFFER *firstNetBuffer = &nbl.FirstNetBuffer;
     MDL *mdlChain = &firstNetBuffer.MdlChain;
     QWORD systemVa = &mdlChain.MappedSystemVa;*/

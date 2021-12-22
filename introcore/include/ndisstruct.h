@@ -82,6 +82,7 @@ typedef struct _NET_BUFFER_LIST
 //-------------------------------------------END OF NET BUFFER LIST----------------------------------------------------------------
 
 //--------------------------------------------------NET BUFFER---------------------------------------------------------------------
+// from: https://github.com/ntdiff/headers/blob/ec39df2a0d463404b8da0facdc4bebd2e838e40f/Win10_21H1_20180/x64/System32/ndis.sys/Standalone/_NET_BUFFER.h
 
 typedef union _NET_BUFFER_DATA_LENGTH
 {
@@ -168,5 +169,23 @@ typedef struct _NET_BUFFER
 } NET_BUFFER, *PNET_BUFFER; /* size: 0x00b0 */
 
 //-----------------------------------------END OF NET BUFFER---------------------------------------------------------------------
+
+//------------------------------------------------MDL----------------------------------------------------------------------------
+//from : https://github.com/ntdiff/headers/blob/ec39df2a0d463404b8da0facdc4bebd2e838e40f/Win10_21H1_20180/x64/System32/ndis.sys/Standalone/_MDL.h
+typedef struct _MDL
+{
+  /* 0x0000 */ struct _MDL* Next;
+  /* 0x0008 */ short Size;
+  /* 0x000a */ short MdlFlags;
+  /* 0x000c */ unsigned short AllocationProcessorNumber;
+  /* 0x000e */ unsigned short Reserved;
+  /* 0x0010 */ struct _EPROCESS* Process;
+  /* 0x0018 */ void* MappedSystemVa;
+  /* 0x0020 */ void* StartVa;
+  /* 0x0028 */ unsigned long ByteCount;
+  /* 0x002c */ unsigned long ByteOffset;
+} MDL, *PMDL; /* size: 0x0030 */
+
+//------------------------------------------ END OF MDL---------------------------------------------------------
 
 #endif

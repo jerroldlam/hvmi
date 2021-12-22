@@ -88,7 +88,7 @@ typedef union _NET_BUFFER_DATA_LENGTH
   union
   {
     /* 0x0000 */ unsigned long DataLength;
-    /* 0x0000 */ unsigned __int64 stDataLength;
+    /* 0x0000 */ unsigned long long stDataLength; //originally __int64
   }; /* size: 0x0008 */
 } NET_BUFFER_DATA_LENGTH, *PNET_BUFFER_DATA_LENGTH; /* size: 0x0008 */
 
@@ -144,7 +144,7 @@ typedef struct _NET_BUFFER
         /* 0x0018 */ unsigned long DataLength;
         struct
         {
-          /* 0x0018 */ unsigned __int64 stDataLength;
+          /* 0x0018 */ unsigned long long stDataLength; //originally __int64
           /* 0x0020 */ struct _MDL* MdlChain;
           /* 0x0028 */ unsigned long DataOffset;
         }; /* size: 0x0014 */

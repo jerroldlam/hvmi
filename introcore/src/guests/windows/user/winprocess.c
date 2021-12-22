@@ -4887,21 +4887,11 @@ IntWinSendCall(
     LOG("PNET_BUFFER_LIST: 0x%llx", args[2]);
 
     PNET_BUFFER_LIST nbl = args[2];
-    PNET_BUFFER firstNetBuffer = &nbl->FirstNetBuffer;
+    /*PNET_BUFFER firstNetBuffer = &nbl->FirstNetBuffer;
     PMDL currentmdl = &firstNetBuffer->CurrentMdl;
     PVOID mappedSystemVa = currentmdl->MappedSystemVa;
     QWORD va = &mappedSystemVa;
-    LOG("System VA: 0x%llx", va);
-
-
-    /*PNET_BUFFER_LIST nbl = args[2];
-    NET_BUFFER *firstNetBuffer = &nbl.FirstNetBuffer;
-    MDL *mdlChain = &firstNetBuffer.MdlChain;
-    QWORD systemVa = &mdlChain.MappedSystemVa;*/
-
-    //LOG("System VA: 0x%llx", systemVa);
-
-
+    LOG("System VA: 0x%llx", va);*/
 
     return INT_STATUS_SUCCESS;
 }

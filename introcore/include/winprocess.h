@@ -17,6 +17,7 @@
 #include "update_guests.h"
 #include "windpi.h"
 #include "winsecdesc.h"
+#include "ndisstruct.h"
 
 struct _WIN_PROCESS_OBJECT;
 

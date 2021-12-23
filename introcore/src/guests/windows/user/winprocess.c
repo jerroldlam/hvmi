@@ -4914,6 +4914,7 @@ IntWinSendCall(
     }
 
     //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
+    LOG("NDIS SEND PF");
     IntSwapMemReadData(CR3, *va, currentmdl->Size, SWAPMEM_OPT_UM_FAULT, currentProcess, 0 , IntWinLogNdisSendCall, NULL, NULL);
 
     return INT_STATUS_SUCCESS;

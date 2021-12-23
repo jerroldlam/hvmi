@@ -4869,6 +4869,8 @@ IntWinSendCall(
 {
     INTSTATUS status;
     QWORD args[5];
+    QWORD CR3;
+    WIN_PROCESS_OBJECT *currentProcess = NULL;
 
     LOG("[MOD] [NDIS SEND] called ---------------------------------------------------------------------------------");
 
@@ -4893,6 +4895,26 @@ IntWinSendCall(
     PQWORD va = mappedSystemVa;
     LOG("System VA: 0x%llx", *va);
 
+    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed obtaining CR3 value, no information to be logged, end introspection
+        ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get CR3 Value.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    currentProcess = IntWinProcFindObjectByCr3(CR3);
+    if (!currentProcess)
+    {
+        //Failed obtaining child process associated, no information to be logged, end introspection
+        ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get object by CR3 value for child process.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    IntSwapMemReadData(CR3, args[5], currentmdl->Size, SWAPMEM_OPT_UM_FAULT, currentProcess, 0 , IntWinLogNdisSendCall, NULL, NULL);
+
     return INT_STATUS_SUCCESS;
 }
 
@@ -4906,25 +4928,46 @@ IntWinReceiveCall(
 }
 
 INTSTATUS
-IntWinNdisFillMemoryCall(
-    _In_ void* Detour
-)
+IntWinLogNdisSendCall(
+    _In_ void* Context,
+    _In_ QWORD Cr3,
+    _In_ QWORD VirtualAddress,
+    _In_ QWORD PhysicalAddress,
+    _In_reads_bytes_(DataSize) void* Data,
+    _In_ DWORD DataSize,
+    _In_ DWORD Flags
+    )
+///
+/// @brief      This function is a callback for IntSwapMemRead used in IntWinSendCall to log the swapped in buffer data.
+///
+/// This function is called from IntSwapMemRead, which will return a pointer to the buffer of an MDL in NdisSendNetBufferLists
+/// and its DataSize. The information obtained will then be logged.
+///
+/// @param[in]  Detour              Not used.
+/// @param[in]  Cr3                 Not used.
+/// @param[in]  VirtualAddress      Not used.
+/// @param[in]  PhysicalAddress     Not used.
+/// @param[in]  Data                Pointer to the buffer data
+/// @param[in]  DataSize            Size of the buffer data (in bytes)
+/// @param[in]  Flags               Not used.
+///
+/// @returns    #INT_STATUS_SUCCESS Always.
+///
 {
-    INTSTATUS status;
-    QWORD args[3];
+    char* dataBuffer;
 
-    LOG("[MOD] [NDIS SEND] called ---------------------------------------------------------------------------------");
+    UNREFERENCED_PARAMETER(Context);
+    UNREFERENCED_PARAMETER(Cr3);
+    UNREFERENCED_PARAMETER(VirtualAddress);
+    UNREFERENCED_PARAMETER(PhysicalAddress);
+    UNREFERENCED_PARAMETER(Flags);
 
-    // Geting Detour Arguments associated with NdisFillMemory
-    status = IntDetGetArguments(Detour, 4, args);
-    if (!INT_SUCCESS(status))
-    {
-        //Failed getting arguments, end introspection
-        ERROR("[MOD] [NDIS SEND] [ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-        LOG("-------------------------------------------------------------------------------------------------------");
-        return INT_STATUS_SUCCESS;
-    }
+    dataBuffer = (char*)Data;
+
+    LOG("[MOD] [NDIS SEND] Buffer length : %u bytes\n ", DataSize);
+    LOG("[MOD] [NDIS SEND] Buffer contents :\n");
+    LOG("%s", dataBuffer);
+    LOG("-------------------------------------------------------------------------------------------------------");
+
     return INT_STATUS_SUCCESS;
-    //LOG("[MOD] [NDIS FILL] Fill value: ");
-    //LOG("%0xllx", args[2]);
 }

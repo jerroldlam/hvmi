@@ -630,8 +630,14 @@ IntWinReceiveCall(
     );
 
 INTSTATUS
-IntWinNdisFillMemoryCall(
-    _In_ void *Detour
+IntWinLogNdisSendCall(
+    _In_ void* Context,
+    _In_ QWORD Cr3,
+    _In_ QWORD VirtualAddress,
+    _In_ QWORD PhysicalAddress,
+    _In_reads_bytes_(DataSize) void* Data,
+    _In_ DWORD DataSize,
+    _In_ DWORD Flags
     );
 
 #endif // _WINPROCESS_H_

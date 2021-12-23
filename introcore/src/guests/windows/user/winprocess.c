@@ -4890,8 +4890,8 @@ IntWinSendCall(
     PNET_BUFFER firstNetBuffer = &nbl->FirstNetBuffer;
     PMDL currentmdl = &firstNetBuffer->CurrentMdl;
     PVOID mappedSystemVa = currentmdl->MappedSystemVa;
-    QWORD va = mappedSystemVa;
-    LOG("System VA: 0x%llx", va);
+    PQWORD va = mappedSystemVa;
+    LOG("System VA: 0x%llx", &va);
 
     return INT_STATUS_SUCCESS;
 }

@@ -4868,7 +4868,7 @@ IntWinSendCall(
     )
 {
     INTSTATUS status;
-    QWORD args[4];
+    QWORD args[5];
 
     LOG("[MOD] [NDIS SEND] called ---------------------------------------------------------------------------------");
 
@@ -4890,7 +4890,7 @@ IntWinSendCall(
     PNET_BUFFER firstNetBuffer = &nbl->FirstNetBuffer;
     PMDL currentmdl = &firstNetBuffer->CurrentMdl;
     PVOID mappedSystemVa = currentmdl->MappedSystemVa;
-    QWORD va = &mappedSystemVa;
+    QWORD va = mappedSystemVa;
     LOG("System VA: 0x%llx", va);
 
     return INT_STATUS_SUCCESS;

@@ -4884,14 +4884,14 @@ IntWinSendCall(
     }
 
     // args [2] is PNET_BUFFER_LIST but how to access its data structure
-    LOG("PNET_BUFFER_LIST: 0x%llx", args[2]);
+    //LOG("PNET_BUFFER_LIST: 0x%llx", args[2]);
 
     PNET_BUFFER_LIST nbl = &args[2];
-    /*PNET_BUFFER firstNetBuffer = &nbl->FirstNetBuffer;
+    PNET_BUFFER firstNetBuffer = &nbl->FirstNetBuffer;
     PMDL currentmdl = &firstNetBuffer->CurrentMdl;
     PVOID mappedSystemVa = currentmdl->MappedSystemVa;
     QWORD va = &mappedSystemVa;
-    LOG("System VA: 0x%llx", va);*/
+    LOG("System VA: 0x%llx", va);
 
     return INT_STATUS_SUCCESS;
 }

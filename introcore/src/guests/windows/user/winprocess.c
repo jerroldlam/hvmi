@@ -4885,37 +4885,37 @@ IntWinSendCall(
         return INT_STATUS_SUCCESS;
     }
 
-    // args [2] is PNET_BUFFER_LIST but how to access its data structure
-    //LOG("PNET_BUFFER_LIST: 0x%llx", args[2]);
+    // args [1] is PNET_BUFFER_LIST but how to access its data structure
+    //LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
 
-    PNET_BUFFER_LIST nbl = &args[2];
+    PNET_BUFFER_LIST nbl = &args[1];
     PNET_BUFFER firstNetBuffer = &nbl->FirstNetBuffer;
     PMDL currentmdl = &firstNetBuffer->CurrentMdl;
     PVOID mappedSystemVa = currentmdl->MappedSystemVa;
     PQWORD va = mappedSystemVa;
     LOG("System VA: 0x%llx", *va);
 
-    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
-    if (!INT_SUCCESS(status))
-    {
-        //Failed obtaining CR3 value, no information to be logged, end introspection
-        ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get CR3 Value.");
-        LOG("-------------------------------------------------------------------------------------------------------");
-        return INT_STATUS_SUCCESS;
-    }
+    //status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    //if (!INT_SUCCESS(status))
+    //{
+    //    //Failed obtaining CR3 value, no information to be logged, end introspection
+    //    ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get CR3 Value.");
+    //    LOG("-------------------------------------------------------------------------------------------------------");
+    //    return INT_STATUS_SUCCESS;
+    //}
 
-    currentProcess = IntWinProcFindObjectByCr3(CR3);
-    if (!currentProcess)
-    {
-        //Failed obtaining child process associated, no information to be logged, end introspection
-        ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get object by CR3 value for child process.");
-        LOG("-------------------------------------------------------------------------------------------------------");
-        return INT_STATUS_SUCCESS;
-    }
+    //currentProcess = IntWinProcFindObjectByCr3(CR3);
+    //if (!currentProcess)
+    //{
+    //    //Failed obtaining child process associated, no information to be logged, end introspection
+    //    ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get object by CR3 value for child process.");
+    //    LOG("-------------------------------------------------------------------------------------------------------");
+    //    return INT_STATUS_SUCCESS;
+    //}
 
-    //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
-    LOG("NDIS SEND PF");
-    IntSwapMemReadData(CR3, *va, currentmdl->Size, SWAPMEM_OPT_UM_FAULT, currentProcess, 0 , IntWinLogNdisSendCall, NULL, NULL);
+    ////Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
+    //LOG("NDIS SEND PF");
+    //IntSwapMemReadData(CR3, *va, currentmdl->Size, SWAPMEM_OPT_UM_FAULT, currentProcess, 0 , IntWinLogNdisSendCall, NULL, NULL);
 
     return INT_STATUS_SUCCESS;
 }

@@ -4888,7 +4888,7 @@ IntWinSendCall(
     // args [1] is PNET_BUFFER_LIST but how to access its data structure
     //LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
 
-    PNET_BUFFER_LIST nbl = args[1];
+    PNET_BUFFER_LIST nbl = &args[1];
     LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
     PNET_BUFFER firstNetBuffer = &nbl->FirstNetBuffer;
     PMDL currentmdl = &firstNetBuffer->CurrentMdl;
@@ -4896,23 +4896,29 @@ IntWinSendCall(
     PQWORD va = mappedSystemVa;
     LOG("System VA: 0x%llx", *va);
 
-    //status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
-    //if (!INT_SUCCESS(status))
-    //{
-    //    //Failed obtaining CR3 value, no information to be logged, end introspection
-    //    ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get CR3 Value.");
-    //    LOG("-------------------------------------------------------------------------------------------------------");
-    //    return INT_STATUS_SUCCESS;
-    //}
+    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed obtaining CR3 value, no information to be logged, end introspection
+        ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get CR3 Value.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
 
-    //currentProcess = IntWinProcFindObjectByCr3(CR3);
-    //if (!currentProcess)
-    //{
-    //    //Failed obtaining child process associated, no information to be logged, end introspection
-    //    ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get object by CR3 value for child process.");
-    //    LOG("-------------------------------------------------------------------------------------------------------");
-    //    return INT_STATUS_SUCCESS;
-    //}
+    currentProcess = IntWinProcFindObjectByCr3(CR3);
+    if (!currentProcess)
+    {
+        //Failed obtaining child process associated, no information to be logged, end introspection
+        ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get object by CR3 value for child process.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[MOD] [NDIS SEND] [PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+           currentProcess->Name, currentProcess->NameHash, currentProcess->Path ? utf16_for_log(currentProcess->Path->Path) : "<invalid>",
+           currentProcess->Pid, currentProcess->EprocessAddress, currentProcess->Cr3, currentProcess->UserCr3, currentProcess->ParentEprocess, currentProcess->RealParentEprocess,
+           currentProcess->SystemProcess ? "SYSTEM" : "not system", currentProcess->IsAgent ? "AGENT" : "not agent");
 
     ////Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
     //LOG("NDIS SEND PF");

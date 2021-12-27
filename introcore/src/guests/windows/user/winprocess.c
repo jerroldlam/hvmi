@@ -4910,11 +4910,10 @@ IntWinSendCall(
            currentProcess->SystemProcess ? "SYSTEM" : "not system", currentProcess->IsAgent ? "AGENT" : "not agent");
 
     // args [1] is PNET_BUFFER_LIST but how to access its data structure
-    //LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
-
-    /*PNET_BUFFER_LIST nbl = &args[1];
     LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
-    PNET_BUFFER firstNetBuffer = nbl->FirstNetBuffer;
+
+    PNET_BUFFER_LIST nbl = args[1];
+    /*PNET_BUFFER firstNetBuffer = nbl->FirstNetBuffer;
     PMDL currentmdl = firstNetBuffer->CurrentMdl;
     PVOID mappedSystemVa = currentmdl->MappedSystemVa;
     PQWORD va = mappedSystemVa;

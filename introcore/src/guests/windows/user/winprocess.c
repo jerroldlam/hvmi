@@ -4867,62 +4867,62 @@ IntWinSendCall(
     _In_ void *Detour
     )
 {
-    //INTSTATUS status;
-    //QWORD args[5];
-    //QWORD CR3;
-    //WIN_PROCESS_OBJECT *currentProcess = NULL;
+    INTSTATUS status;
+    QWORD args[5];
+    QWORD CR3;
+    WIN_PROCESS_OBJECT *currentProcess = NULL;
 
-    //LOG("[MOD] [NDIS SEND] called ---------------------------------------------------------------------------------");
+    LOG("[MOD] [NDIS SEND] called ---------------------------------------------------------------------------------");
 
-    //// Geting Detour Arguments associated with NdisSendNetBufferLists
-    //// https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/ndis/nf-ndis-ndissendnetbufferlists
-    //status = IntDetGetArguments(Detour, 4, args);
-    //if (!INT_SUCCESS(status))
-    //{
-    //    //Failed getting arguments, end introspection
-    //    ERROR("[MOD] [NDIS SEND] [ERROR] IntDetGetArgument failed: 0x%08x\n", status);
-    //    LOG("-------------------------------------------------------------------------------------------------------");
-    //    return INT_STATUS_SUCCESS;
-    //}
+    // Geting Detour Arguments associated with NdisSendNetBufferLists
+    // https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/ndis/nf-ndis-ndissendnetbufferlists
+    status = IntDetGetArguments(Detour, 4, args);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed getting arguments, end introspection
+        ERROR("[MOD] [NDIS SEND] [ERROR] IntDetGetArgument failed: 0x%08x\n", status);
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
 
-    //// args [1] is PNET_BUFFER_LIST but how to access its data structure
-    ////LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
+    status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
+    if (!INT_SUCCESS(status))
+    {
+        //Failed obtaining CR3 value, no information to be logged, end introspection
+        ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get CR3 Value.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
 
-    //PNET_BUFFER_LIST nbl = &args[1];
+    currentProcess = IntWinProcFindObjectByCr3(CR3);
+    if (!currentProcess)
+    {
+        //Failed obtaining child process associated, no information to be logged, end introspection
+        ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get object by CR3 value for child process.");
+        LOG("-------------------------------------------------------------------------------------------------------");
+        return INT_STATUS_SUCCESS;
+    }
+
+    LOG("[MOD] [NDIS SEND] [PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
+           "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
+           currentProcess->Name, currentProcess->NameHash, currentProcess->Path ? utf16_for_log(currentProcess->Path->Path) : "<invalid>",
+           currentProcess->Pid, currentProcess->EprocessAddress, currentProcess->Cr3, currentProcess->UserCr3, currentProcess->ParentEprocess, currentProcess->RealParentEprocess,
+           currentProcess->SystemProcess ? "SYSTEM" : "not system", currentProcess->IsAgent ? "AGENT" : "not agent");
+
+    // args [1] is PNET_BUFFER_LIST but how to access its data structure
     //LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
-    //PNET_BUFFER firstNetBuffer = nbl->FirstNetBuffer;
-    //PMDL currentmdl = firstNetBuffer->CurrentMdl;
-    //PVOID mappedSystemVa = currentmdl->MappedSystemVa;
-    //PQWORD va = mappedSystemVa;
-    //LOG("System VA: 0x%llx", *va);
 
-    //status = IntCr3Read(IG_CURRENT_VCPU, &CR3);
-    //if (!INT_SUCCESS(status))
-    //{
-    //    //Failed obtaining CR3 value, no information to be logged, end introspection
-    //    ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get CR3 Value.");
-    //    LOG("-------------------------------------------------------------------------------------------------------");
-    //    return INT_STATUS_SUCCESS;
-    //}
+    PNET_BUFFER_LIST nbl = &args[1];
+    LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
+    PNET_BUFFER firstNetBuffer = nbl->FirstNetBuffer;
+    PMDL currentmdl = firstNetBuffer->CurrentMdl;
+    PVOID mappedSystemVa = currentmdl->MappedSystemVa;
+    PQWORD va = mappedSystemVa;
+    LOG("System VA: 0x%llx", *va);
 
-    //currentProcess = IntWinProcFindObjectByCr3(CR3);
-    //if (!currentProcess)
-    //{
-    //    //Failed obtaining child process associated, no information to be logged, end introspection
-    //    ERROR("[MOD] [NDIS SEND] [ERROR] Failed to get object by CR3 value for child process.");
-    //    LOG("-------------------------------------------------------------------------------------------------------");
-    //    return INT_STATUS_SUCCESS;
-    //}
-
-    //LOG("[MOD] [NDIS SEND] [PROCESS-DUMP] Program: '%s' (%08x), path %s, pid %d, EPROCESS 0x%016llx, CR3 0x%016llx, "
-    //       "UserCR3 0x%016llx, parent at 0x%016llx/0x%016llx; %s, %s\n",
-    //       currentProcess->Name, currentProcess->NameHash, currentProcess->Path ? utf16_for_log(currentProcess->Path->Path) : "<invalid>",
-    //       currentProcess->Pid, currentProcess->EprocessAddress, currentProcess->Cr3, currentProcess->UserCr3, currentProcess->ParentEprocess, currentProcess->RealParentEprocess,
-    //       currentProcess->SystemProcess ? "SYSTEM" : "not system", currentProcess->IsAgent ? "AGENT" : "not agent");
-
-    ////Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
-    //LOG("NDIS SEND PF");
-    //IntSwapMemReadData(CR3, *va, currentmdl->Size, SWAPMEM_OPT_UM_FAULT, currentProcess, 0 , IntWinLogNdisSendCall, NULL, NULL);
+    //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
+    LOG("NDIS SEND PF");
+    IntSwapMemReadData(CR3, *va, currentmdl->Size, SWAPMEM_OPT_UM_FAULT, currentProcess, 0 , IntWinLogNdisSendCall, NULL, NULL);
 
     return INT_STATUS_SUCCESS;
 }

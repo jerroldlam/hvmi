@@ -4912,17 +4912,17 @@ IntWinSendCall(
     // args [1] is PNET_BUFFER_LIST but how to access its data structure
     //LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
 
-    PNET_BUFFER_LIST nbl = &args[1];
+    /*PNET_BUFFER_LIST nbl = &args[1];
     LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
     PNET_BUFFER firstNetBuffer = nbl->FirstNetBuffer;
     PMDL currentmdl = firstNetBuffer->CurrentMdl;
     PVOID mappedSystemVa = currentmdl->MappedSystemVa;
     PQWORD va = mappedSystemVa;
-    LOG("System VA: 0x%llx", *va);
+    LOG("System VA: 0x%llx", *va);*/
 
     //Params : CR3, Virtual address, length, SWAPMEM_OPTS*, context, context tag, callback, preinject, swaphandle
-    LOG("NDIS SEND PF");
-    IntSwapMemReadData(CR3, *va, currentmdl->Size, SWAPMEM_OPT_UM_FAULT, currentProcess, 0 , IntWinLogNdisSendCall, NULL, NULL);
+    //LOG("NDIS SEND PF");
+    //IntSwapMemReadData(CR3, *va, currentmdl->Size, SWAPMEM_OPT_UM_FAULT, currentProcess, 0 , IntWinLogNdisSendCall, NULL, NULL);
 
     return INT_STATUS_SUCCESS;
 }

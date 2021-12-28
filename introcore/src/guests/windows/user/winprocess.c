@@ -4916,7 +4916,7 @@ IntWinSendCall(
     PNET_BUFFER firstNetBuffer = nbl->FirstNetBuffer;
     LOG("Current MDL Offset: 0x%lu", firstNetBuffer->CurrentMdlOffset);
     LOG("Data length: 0x%lu", firstNetBuffer->DataLength);
-    LOG("Data Physical Address: 0x%lu", firstNetBuffer->DataPhysicalAddress); 
+    //LOG("Data Physical Address: 0x%lu", firstNetBuffer->DataPhysicalAddress); 
     /*PMDL currentmdl = firstNetBuffer->CurrentMdl;
     PVOID mappedSystemVa = currentmdl->MappedSystemVa;
     PQWORD va = mappedSystemVa;

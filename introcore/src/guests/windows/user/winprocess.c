@@ -4913,8 +4913,11 @@ IntWinSendCall(
     LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
 
     PNET_BUFFER_LIST nbl = args[1];
-    /*PNET_BUFFER firstNetBuffer = nbl->FirstNetBuffer;
-    PMDL currentmdl = firstNetBuffer->CurrentMdl;
+    PNET_BUFFER firstNetBuffer = nbl->FirstNetBuffer;
+    LOG("Current MDL Offset: 0x%llx", firstNetBuffer->CurrentMdlOffset);
+    LOG("Data length: 0x%llx", firstNetBuffer->DataLength);
+    LOG("Data Physical Address: 0x%llx", firstNetBuffer->DataPhysicalAddress); 
+    /*PMDL currentmdl = firstNetBuffer->CurrentMdl;
     PVOID mappedSystemVa = currentmdl->MappedSystemVa;
     PQWORD va = mappedSystemVa;
     LOG("System VA: 0x%llx", *va);*/

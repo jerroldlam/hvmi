@@ -4908,16 +4908,18 @@ IntWinSendCall(
            currentProcess->Name, currentProcess->NameHash, currentProcess->Path ? utf16_for_log(currentProcess->Path->Path) : "<invalid>",
            currentProcess->Pid, currentProcess->EprocessAddress, currentProcess->Cr3, currentProcess->UserCr3, currentProcess->ParentEprocess, currentProcess->RealParentEprocess,
            currentProcess->SystemProcess ? "SYSTEM" : "not system", currentProcess->IsAgent ? "AGENT" : "not agent");
+    LOG("-------------------------------------------------------------------------------------------------------");
 
     // args [1] is PNET_BUFFER_LIST but how to access its data structure
-    LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
+    /*LOG("PNET_BUFFER_LIST: 0x%llx", args[1]);
 
     PNET_BUFFER_LIST nbl = args[1];
     PNET_BUFFER firstNetBuffer = nbl->FirstNetBuffer;
     LOG("Current MDL Offset: 0x%lu", firstNetBuffer->CurrentMdlOffset);
     LOG("Data length: 0x%lu", firstNetBuffer->DataLength);
-    //LOG("Data Physical Address: 0x%lu", firstNetBuffer->DataPhysicalAddress); 
-    /*PMDL currentmdl = firstNetBuffer->CurrentMdl;
+    LOG("Data Physical Address: 0x%lu", firstNetBuffer->DataPhysicalAddress);
+
+    PMDL currentmdl = firstNetBuffer->CurrentMdl;
     PVOID mappedSystemVa = currentmdl->MappedSystemVa;
     PQWORD va = mappedSystemVa;
     LOG("System VA: 0x%llx", *va);*/
